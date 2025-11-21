@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Nordholm Auction House</title>
+    <link rel="stylesheet" href="./css/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="min-h-screen bg-[#FAF9F6] flex flex-col items-center justify-center p-4"
+  >
+    <div class="w-full max-w-sm bg-[#E7E1D8] p-8 rounded-2xl shadow-md">
+      <h1 class="text-center text-4xl font-playfair text-[#1B1B1C] mb-8">
+        Log in with email
+      </h1>
+      <form id="login-form" class="space-y-6 font-worksans">
+        <div class="flex flex-col">
+          <label class="text-[#1B1B1C] mb-1 text-sm">Email</label>
+          <input
+            id="email"
+            type="email"
+            required
+            class="w-full p-3 rounded-md border border-gray-400 bg-[#FAF9F6] text-gray-800 focus:ring-2 focus:ring-black/40 outline-none"
+          />
+        </div>
+        <div class="flex flex-col">
+          <label class="text-[#1B1B1C] mb-1 text-sm">Password</label>
+
+          <div class="relative">
+            <input
+              id="password"
+              type="password"
+              required
+              class="w-full p-3 pr-10 rounded-md border border-gray-400 bg-[#FAF9F6] text-gray-800 focus:ring-2 focus:ring-black/40 outline-none"
+            />
+            <button
+              type="button"
+              id="toggle-password"
+              class="absolute inset-y-0 right-3 flex items-center"
+            >
+              <img
+                src="./assets/icons/eye-off.svg"
+                id="eye-icon"
+                class="w-5 h-5 opacity-70 hover:opacity-100"
+                alt="Toggle password visibility"
+              />
+            </button>
+          </div>
+        </div>
+        <p
+          id="login-error"
+          class="hidden text-sm text-[#893B2F] bg-[#FDECEC] border border-[#F3B6AE] px-3 py-2 rounded-md"
+        >
+          Login failed. Please check your email and password.
+        </p>
+        <button
+          type="submit"
+          class="w-full bg-[#1B1B1C] font-worksans text-[#FAF9F6] py-3 rounded-lg text-center font-medium hover:bg-black/90 transition"
+        >
+          Login
+        </button>
+      </form>
+    </div>
+    <div class="h-16"></div>
+    <div
+      class="w-full bg-[#E7E1D8] py-12 flex flex-col items-center text-center"
+    >
+      <h2 class="text-3xl font-playfair text-[#1B1B1C] mb-4">New here?</h2>
+      <a
+        href="register.html"
+        class="text-[#4F6E8F] underline font-worksans text-sm hover:text-[#1B1B1C] transition"
+        >Become a member and register here</a
+      >
+    </div>
+    <div
+      id="login-toast"
+      class="hidden fixed bottom-5 right-5 bg-[#1B1B1C] text-[#FAF9F6] px-4 py-3 rounded-lg shadow-xl font-worksans"
+    ></div>
+    <script type="module" src="./js/pages/login.js"></script>
+  </body>
+</html>

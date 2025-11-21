@@ -16,3 +16,13 @@ export async function registerUser({ username, email, password }) {
 
   return result;
 }
+
+// login user
+export async function loginUser({ email, password }) {
+  const body = JSON.stringify({ email, password });
+
+  return await apiFetch('/auth/login', {
+    method: 'POST',
+    body,
+  });
+}
