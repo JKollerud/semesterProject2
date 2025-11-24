@@ -1,4 +1,11 @@
 import { registerUser } from '../api/auth.js';
+import {
+  updateNavAuthState,
+  redirectIfAuthenticated,
+} from '../utils/guards.js';
+
+redirectIfAuthenticated();
+updateNavAuthState();
 
 const form = document.querySelector('#register-form');
 const usernameInput = document.querySelector('#username');

@@ -1,7 +1,12 @@
 import { loginUser } from '../api/auth.js';
 import { saveAuth } from '../utils/storage.js';
+import {
+  updateNavAuthState,
+  redirectIfAuthenticated,
+} from '../utils/guards.js';
 
-console.log('login.js LOADED');
+redirectIfAuthenticated();
+updateNavAuthState();
 
 const form = document.querySelector('#login-form');
 const emailInput = document.querySelector('#email');
