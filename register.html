@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -9,119 +9,107 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
   </head>
   <body class="min-h-screen bg-[#FAF9F6] flex flex-col">
     <header class="w-full bg-[#E7E1D8]">
       <div
-        class="max-w-5xl mx-auto flex items-center justify-between px-4 py-4"
-      >
-        <button
-          id="nav-menu-button"
-          class="flex flex-col justify-between w-8 h-6 focus:outline-none"
-          aria-label="Open menu"
-          type="button"
-        >
-          <span class="block h-[2px] bg-[#4F6E60]"></span>
-          <span class="block h-[2px] bg-[#4F6E60]"></span>
-          <span class="block h-[2px] bg-[#4F6E60]"></span>
-        </button>
-        <a href="index.html" class="font-playfair text-2xl text-[#1B1B1C]"
-          >Nordholm</a
-        >
+        class="max-w-5xl mx-auto flex items-center justify-between px-4 py-4">
+        <div class="relative">
+          <button
+            id="nav-menu-button"
+            class="flex flex-col justify-between w-8 h-6 focus:outline-none"
+            aria-label="Open menu"
+            type="button">
+            <span class="block h-[2px] bg-[#4F6E60]"></span>
+            <span class="block h-[2px] bg-[#4F6E60]"></span>
+            <span class="block h-[2px] bg-[#4F6E60]"></span>
+          </button>
+          <nav
+            id="nav-main-menu"
+            class="hidden absolute left-0 mt-10 w-[20rem] max-w-[90vw] bg-[#E7E1D8] border border-[#D2C8BC] rounded-xl shadow-xl z-40 flex flex-col">
+            <div
+              class="flex items-center justify-between px-6 py-4 border-b border-[#D2C8BC]">
+              <button
+                id="nav-menu-close"
+                type="button"
+                class="text-2xl text-[#4F6E60] leading-none focus:outline-none">
+                &times;
+              </button>
+            </div>
+            <div class="px-6 py-6 space-y-4">
+              <a
+                href="listings.html"
+                class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
+                Auctions
+              </a>
+              <a
+                href="contact.html"
+                class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
+                Contact us
+              </a>
+            </div>
+            <div class="border-t border-[#D2C8BC] px-6 py-4 space-y-2">
+              <a
+                href="login.html"
+                data-auth-visible="logged-out"
+                class="block font-worksans text-sm text-[#1B1B1C] hover:opacity-80">
+                Log in
+              </a>
+              <a
+                href="register.html"
+                data-auth-visible="logged-out"
+                class="block font-worksans text-sm text-[#1B1B1C] hover:opacity-80">
+                Register an account
+              </a>
+              <button
+                type="button"
+                data-logout
+                data-auth-visible="logged-in"
+                class="hidden block font-worksans text-sm text-left text-[#9A3B30] hover:opacity-80">
+                Log out
+              </button>
+            </div>
+          </nav>
+        </div>
+        <a href="index.html" class="font-playfair text-2xl text-[#1B1B1C]">
+          Nordholm
+        </a>
         <div class="relative">
           <button
             id="nav-user-button"
             class="flex flex-col items-center gap-1 focus:outline-none"
             aria-label="User menu"
-            type="button"
-          >
+            type="button">
             <div
-              class="w-7 h-7 rounded-full bg-[#4F6E60] flex items-center justify-center"
-            >
+              class="w-7 h-7 rounded-full bg-[#4F6E60] flex items-center justify-center">
               <span class="text-sm font-semibold text-[#F8F5EE]">N</span>
             </div>
             <span
               id="nav-username"
-              class="hidden text-xs font-worksans text-[#1B1B1C]"
-            ></span>
+              class="hidden text-xs font-worksans text-[#1B1B1C]"></span>
           </button>
           <div
             id="nav-user-menu"
-            class="hidden absolute right-0 mt-6 w-40 bg-[#F7F3EB] border border-[#D2C8BC] rounded-xl shadow-lg py-2 z-20"
-          >
+            class="hidden absolute right-0 mt-10 w-40 bg-[#F7F3EB] border border-[#D2C8BC] rounded-xl shadow-lg py-2 z-20">
             <a
               href="profile.html"
-              class="block px-4 text-sm font-worksans text-[#1B1B1C] hover:bg-[#E7E1D8]"
-              >My profile</a
-            >
+              class="block px-4 text-sm font-worksans text-[#1B1B1C] hover:bg-[#E7E1D8]">
+              My profile
+            </a>
             <button
               type="button"
               data-logout
-              class="block w-full text-left px-4 py-2 text-sm font-worksans text-[#9A3B30] hover:bg-[#FDECEC]"
-            >
+              class="block w-full text-left px-4 py-2 text-sm font-worksans text-[#9A3B30] hover:bg-[#FDECEC]">
               Log out
             </button>
           </div>
         </div>
-        <nav
-          id="nav-main-menu"
-          class="hidden absolute top-20 left-4 w-[20rem] max-w-full bg-[#E7E1D8] border border-[#D2C8BC] rounded-xl shadow-xl z-40 flex flex-col"
-        >
-          <div
-            class="flex items-center justify-between px-6 py-4 border-b border-[#D2C8BC]"
-          >
-            <button
-              id="nav-menu-close"
-              type="button"
-              class="text-2xl text-[#4F6E60] leading-none focus:outline-none"
-            >
-              &times;
-            </button>
-          </div>
-          <div class="px-6 py-6 space-y-4">
-            <a
-              href="index.html"
-              class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80"
-            >
-              Auctions
-            </a>
-            <a
-              href="contact.html"
-              class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80"
-            >
-              Contact us
-            </a>
-          </div>
-          <div class="border-t border-[#D2C8BC] px-6 py-4 space-y-2">
-            <a
-              href="login.html"
-              data-auth-visible="logged-out"
-              class="block font-worksans text-sm text-[#1B1B1C] hover:opacity-80"
-            >
-              Log in
-            </a>
-            <a
-              href="register.html"
-              data-auth-visible="logged-out"
-              class="block font-worksans text-sm text-[#1B1B1C] hover:opacity-80"
-            >
-              Register an account
-            </a>
-            <button
-              type="button"
-              data-logout
-              data-auth-visible="logged-in"
-              class="hidden block font-worksans text-sm text-left text-[#9A3B30] hover:opacity-80"
-            >
-              Log out
-            </button>
-          </div>
-        </nav>
       </div>
     </header>
-
+    <div
+      id="nav-backdrop"
+      class="hidden fixed inset-0 bg-black/30 backdrop-blur-sm z-30"></div>
     <main class="flex-1 flex flex-col items-center">
       <div class="w-full max-w-sm bg-[#E7E1D8] p-8 rounded-2xl shadow-md mt-12">
         <h1 class="text-center text-4xl font-playfair text-[#1B1B1C] mb-8">
@@ -129,86 +117,75 @@
         </h1>
         <form id="register-form" class="space-y-6">
           <div class="flex flex-col">
-            <label class="font-worksans text-[#1B1B1C] mb-1 text-sm"
-              >Username</label
-            >
+            <label class="font-worksans text-[#1B1B1C] mb-1 text-sm">
+              Username
+            </label>
             <input
               id="username"
               type="text"
               required
-              class="p-3 rounded-md border border-gray-400 bg-[#FAF9F6] text-gray-800 focus:ring-2 focus:ring-black/40 outline-none"
-            />
+              class="p-3 rounded-md border border-gray-400 bg-[#FAF9F6] text-gray-800 focus:ring-2 focus:ring-black/40 outline-none" />
           </div>
           <div class="flex flex-col">
-            <label class="font-worksans text-[#1B1B1C] mb-1 text-sm"
-              >Email</label
-            >
+            <label class="font-worksans text-[#1B1B1C] mb-1 text-sm">
+              Email
+            </label>
             <input
               id="email"
               type="email"
               required
-              class="p-3 rounded-md border border-gray-400 bg-[#FAF9F6] text-gray-800 focus:ring-2 focus:ring-black/40 outline-none"
-            />
+              class="p-3 rounded-md border border-gray-400 bg-[#FAF9F6] text-gray-800 focus:ring-2 focus:ring-black/40 outline-none" />
             <p
               id="email-error"
-              class="font-worksans text-[#893B2F] text-sm hidden mt-1"
-            >
+              class="font-worksans text-[#893B2F] text-sm hidden mt-1">
               Email must end with @stud.noroff.no
             </p>
           </div>
           <div class="flex flex-col">
-            <label class="font-worksans text-[#1B1B1C] mb-1 text-sm"
-              >Password</label
-            >
+            <label class="font-worksans text-[#1B1B1C] mb-1 text-sm">
+              Password
+            </label>
             <div class="relative">
               <input
                 id="password"
                 type="password"
                 required
-                class="w-full p-3 pr-10 rounded-md border border-gray-400 bg-[#FAF9F6] text-gray-800 focus:ring-2 focus:ring-black/40 outline-none"
-              />
+                class="w-full p-3 pr-10 rounded-md border border-gray-400 bg-[#FAF9F6] text-gray-800 focus:ring-2 focus:ring-black/40 outline-none" />
               <button
                 type="button"
                 id="toggle-password"
-                class="absolute right-3 inset-y-0 flex items-center text-gray-500 hover:text-gray-700"
-              >
+                class="absolute right-3 inset-y-0 flex items-center text-gray-500 hover:text-gray-700">
                 <img
                   src="./assets/icons/eye-off.svg"
                   id="eye-icon"
                   class="w-5 h-5 opacity-70 hover:opacity-100"
-                  alt="Toggle password visibility"
-                />
+                  alt="Toggle password visibility" />
               </button>
             </div>
           </div>
           <button
             type="submit"
-            class="w-full bg-[#1B1B1C] font-worksans text-[#FAF9F6] py-3 rounded-lg text-center font-medium hover:bg-black/90 transition"
-          >
+            class="w-full bg-[#1B1B1C] font-worksans text-[#FAF9F6] py-3 rounded-lg text-center font-medium hover:bg-black/90 transition">
             Register
           </button>
         </form>
         <div
           id="register-toast"
-          class="hidden fixed bottom-5 right-5 bg-[#1B1B1C] text-[#FAF9F6] px-4 py-3 rounded-lg shadow-xl font-worksans"
-        ></div>
+          class="hidden fixed bottom-5 right-5 bg-[#1B1B1C] text-[#FAF9F6] px-4 py-3 rounded-lg shadow-xl font-worksans"></div>
       </div>
-
       <div class="h-16"></div>
       <div
-        class="w-full bg-[#E7E1D8] py-12 flex flex-col items-center text-center"
-      >
+        class="w-full bg-[#E7E1D8] py-12 flex flex-col items-center text-center">
         <h2 class="text-3xl font-playfair text-[#1B1B1C] mb-4">
           Already registered?
         </h2>
         <a
           href="login.html"
-          class="text-[#4F6E8F] underline font-worksans text-sm hover:text-[#1B1B1C] transition"
-          >Sign in here</a
-        >
+          class="text-[#4F6E8F] underline font-worksans text-sm hover:text-[#1B1B1C] transition">
+          Sign in here
+        </a>
       </div>
     </main>
-
     <script type="module" src="./js/pages/register.js"></script>
     <script type="module" src="./js/utils/nav.js"></script>
   </body>

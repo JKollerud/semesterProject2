@@ -5,6 +5,7 @@ const userMenu = document.querySelector('#nav-user-menu');
 const usernameEl = document.querySelector('#nav-username');
 const menuButton = document.querySelector('#nav-menu-button');
 const mainMenu = document.querySelector('#nav-main-menu');
+const backdrop = document.querySelector('#nav-backdrop');
 
 // check login state
 function isLoggedIn() {
@@ -58,13 +59,22 @@ function toggleUserMenu() {
 // toggle hamburger menu
 function toggleMainMenu() {
   if (!mainMenu) return;
-  mainMenu.classList.toggle('hidden');
+
+  const isOpen = !mainMenu.classList.contains('hidden');
+  if (isOpen) {
+    mainMenu.classList.add('hidden');
+    if (backdrop) backdrop.classList.add('hidden');
+  } else {
+    mainMenu.classList.remove('hidden');
+    if (backdrop) backdrop.classList.remove('hidden');
+  }
 }
 
 // close both menus
 function closeAllMenus() {
   if (userMenu) userMenu.classList.add('hidden');
   if (mainMenu) mainMenu.classList.add('hidden');
+  if (backdrop) backdrop.classList.add('hidden');
 }
 
 //avatar click
@@ -87,6 +97,12 @@ if (menuButton) {
 document.addEventListener('click', () => {
   closeAllMenus();
 });
+
+if (backdrop) {
+  backdrop.addEventListener('click', () => {
+    closeAllMenus();
+  });
+}
 
 // logout
 document.querySelectorAll('[data-logout]').forEach((btn) => {

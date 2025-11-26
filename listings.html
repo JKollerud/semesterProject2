@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home | Nordholm Acution House</title>
+    <title>Listings | Nordholm Auction House</title>
     <link rel="stylesheet" href="./css/main.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -11,7 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap"
       rel="stylesheet" />
   </head>
-  <body>
+  <body class="min-h-screen bg-[#FAF9F6] flex flex-col">
     <header class="w-full bg-[#E7E1D8]">
       <div
         class="max-w-5xl mx-auto flex items-center justify-between px-4 py-4">
@@ -83,7 +83,7 @@
             type="button">
             <div
               class="w-7 h-7 rounded-full bg-[#4F6E60] flex items-center justify-center">
-              <span class="text-sm font-semibold text-[#F8F5EE]">N</span>
+              <span class="text-sm font-semibold text-[#F8F5EE]">U</span>
             </div>
             <span
               id="nav-username"
@@ -91,7 +91,7 @@
           </button>
           <div
             id="nav-user-menu"
-            class="hidden absolute right-0 mt-6 w-40 bg-[#F7F3EB] border border-[#D2C8BC] rounded-xl shadow-lg py-2 z-20">
+            class="hidden absolute right-0 mt-10 w-40 bg-[#F7F3EB] border border-[#D2C8BC] rounded-xl shadow-lg py-2 z-20">
             <a
               href="profile.html"
               class="block px-4 text-sm font-worksans text-[#1B1B1C] hover:bg-[#E7E1D8]">
@@ -110,7 +110,86 @@
     <div
       id="nav-backdrop"
       class="hidden fixed inset-0 bg-black/30 backdrop-blur-sm z-30"></div>
-    <script type="module" src="./js/pages/index.js"></script>
+    <main class="flex-1">
+      <section class="max-w-5xl mx-auto px-4 py-10">
+        <h1 class="font-playfair text-3xl text-[#1B1B1C] mb-6">Listings</h1>
+        <div class="grid gap-6 grid-cols-2 lg:grid-cols-3" id="listings-grid">
+          <template id="listing-card-template">
+            <article
+              class="group overflow-hidden rounded-2xl bg-[#FAF9F6] border border-[#E0D6C8] shadow-sm hover:-translate-y-1 transition cursor-pointer">
+              <div
+                class="relative h-48 bg-[#4F6E60] flex items-center justify-center">
+                <img
+                  data-image
+                  src="./assets/icons/placeholder-listing.svg"
+                  alt="Auction item image"
+                  class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition" />
+                <div
+                  class="absolute top-3 left-3 rounded-full bg-[#F7F3EB]/90 px-3 py-1 text-xs font-worksans text-[#1B1B1C]"
+                  data-bids>
+                  0 bids
+                </div>
+                <div
+                  class="absolute bottom-3 left-3 rounded-full bg-[#FDECEC]/95 px-3 py-1 text-xs font-worksans text-[#893B2F]"
+                  data-time-remaining>
+                  In about 15 hours
+                </div>
+              </div>
+              <div class="p-5 space-y-4">
+                <h2 class="font-playfair text-xl text-[#1B1B1C]" data-title>
+                  Auction item
+                </h2>
+                <dl class="space-y-2 text-xs font-worksans text-[#4B4B4C]">
+                  <div class="flex justify-between gap-4">
+                    <dt class="text-[#9B9287]">By:</dt>
+                    <dd class="text-right">
+                      <a
+                        class="text-[#4F6E8F] hover:text-[#1B1B1C] underline"
+                        data-seller-link>
+                        <span data-seller-name>Seller Username</span>
+                      </a>
+                    </dd>
+                  </div>
+                  <div class="flex justify-between gap-4">
+                    <dt class="text-[#9B9287]">Ends:</dt>
+                    <dd class="text-right text-[#893B2F]" data-ends-at>
+                      December 10, 2025
+                    </dd>
+                  </div>
+                  <div class="flex justify-between gap-4">
+                    <dt class="text-[#9B9287]">Current bid:</dt>
+                    <dd class="text-right text-[#1B1B1C]">
+                      <span class="font-semibold" data-current-bid>100</span>
+                      Credits
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </article>
+          </template>
+        </div>
+        <nav
+          id="listings-pagination"
+          class="mt-8 flex items-center justify-center gap-4 font-worksans text-sm text-[#4B4B4C]">
+          <button
+            id="pagination-prev"
+            type="button"
+            class="px-3 py-1 rounded-full border border-[#D2C8BC] bg-[#F7F3EB] hover:bg-[#E7E1D8] disabled:opacity-40 disabled:cursor-not-allowed">
+            Previous
+          </button>
+          <span id="pagination-info" class="text-xs sm:text-sm">
+            Page 1 of 1
+          </span>
+          <button
+            id="pagination-next"
+            type="button"
+            class="px-3 py-1 rounded-full border border-[#D2C8BC] bg-[#F7F3EB] hover:bg-[#E7E1D8] disabled:opacity-40 disabled:cursor-not-allowed">
+            Next
+          </button>
+        </nav>
+      </section>
+    </main>
+    <script type="module" src="./js/pages/listings.js"></script>
     <script type="module" src="./js/utils/nav.js"></script>
   </body>
 </html>
