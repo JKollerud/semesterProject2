@@ -1,7 +1,8 @@
 // for listings.html, all listings
 import { getListings } from "../api/listings.js";
 
-const PAGE_SIZE = 18;
+const PAGE_SIZE = 20;
+const ENDING_WINDOW_HOURS = 24;
 
 const grid = document.querySelector("#listings-grid");
 const template = document.querySelector("#listing-card-template");
@@ -11,12 +12,26 @@ const prevBtn = document.querySelector("#pagination-prev");
 const nextBtn = document.querySelector("#pagination-next");
 const pageInfo = document.querySelector("#pagination-info");
 
+// filter and sort
+const searchInput = document.querySelector("#filter-search");
+const tagsInput = document.querySelector("#filter-tags");
+const activeToggle = document.querySelector("#filter-active");
+const sortSelect = document.querySelector("#sort-select");
+const clearBtn = document.querySelector("#filter-clear");
+
 let currentPage = 1;
 let pageCount = 1;
 
+// filter states
+let searchQuery = "";
+let tagFilter = "";
+let activeOnly = false;
+let sortOption = "newest";
+let allListingsCache = null;
+const MAX_FILTER_ITEMS = 600;
+
 // card
 function createListingCard(listing) {
-  // clone card
   const card = template.content.firstElementChild.cloneNode(true);
 
   // elements inside card
@@ -24,6 +39,7 @@ function createListingCard(listing) {
   const bidsEl = card.querySelector("[data-bids]");
   const timeEl = card.querySelector("[data-time-remaining]");
   const imgEl = card.querySelector("[data-image]");
+  const sellerNameEl = card.querySelector("[data-seller-name]");
   const sellerLinkEl = card.querySelector("[data-seller-link]");
   const endsAtEl = card.querySelector("[data-ends-at]");
   const currentBidEl = card.querySelector("[data-current-bid]");
@@ -60,6 +76,8 @@ function createListingCard(listing) {
   }
 
   // seller
+  if (sellerNameEl) sellerNameEl.textContent = sellerName;
+
   if (sellerLinkEl) {
     sellerLinkEl.href = `profile.html?name=${encodeURIComponent(sellerName)}`;
     sellerLinkEl.textContent = sellerName;
@@ -117,57 +135,155 @@ function getHighestBid(listing) {
 
 // update pagination bar
 function updatePagination(meta) {
-  if (!pageInfo) return;
+  if (!meta || !pageInfo) return;
 
-  const pageFromMeta = meta?.currentPage ?? meta?.page ?? currentPage ?? 1;
-  const pageCountFromMeta = meta?.pageCount ?? meta?.lastPage ?? pageCount ?? 1;
-
-  currentPage = pageFromMeta;
-  pageCount = pageCountFromMeta;
+  currentPage = meta.currentPage || 1;
+  pageCount = meta.pageCount || 1;
 
   pageInfo.textContent = `Page ${currentPage} of ${pageCount}`;
 
-  const isFirst = meta?.isFirstPage ?? currentPage <= 1;
-  const isLast = meta?.isLastPage ?? currentPage >= pageCount;
-
   if (prevBtn) {
-    prevBtn.disabled = isFirst;
+    prevBtn.disabled = currentPage <= 1;
   }
 
   if (nextBtn) {
-    nextBtn.disabled = isLast;
+    nextBtn.disabled = meta.isLastPage || currentPage >= pageCount;
   }
+}
+
+// sort params for API
+function getSortParams() {
+  const value = (sortOption || "newest").toLowerCase();
+
+  if (value === "oldest") {
+    return { sort: "created", sortOrder: "asc" };
+  }
+
+  if (value === "ending" || value === "endingsoon" || value === "ending-soon") {
+    return { sort: "endsAt", sortOrder: "asc" };
+  }
+
+  return { sort: "created", sortOrder: "desc" };
+}
+
+// helper load all listings
+async function loadAllListings(sort, sortOrder) {
+  if (
+    allListingsCache &&
+    allListingsCache.sort === sort &&
+    allListingsCache.sortOrder === sortOrder
+  ) {
+    return allListingsCache.items;
+  }
+
+  let items = [];
+  let page = 1;
+  let pageCountLocal = 1;
+
+  while (page <= pageCountLocal && items.length < MAX_FILTER_ITEMS) {
+    const { data, meta } = await getListings({
+      limit: 100,
+      page,
+      sort,
+      sortOrder,
+    });
+
+    items = items.concat(data || []);
+
+    pageCountLocal = meta?.pageCount || pageCountLocal;
+    page += 1;
+  }
+
+  allListingsCache = { sort, sortOrder, items };
+  return items;
 }
 
 // get list
 async function initListingsPage(page = 1) {
   if (!grid || !template) return;
-
   grid.innerHTML = "";
 
   try {
-    const result = await getListings({
-      limit: PAGE_SIZE,
-      page,
-    });
+    const { sort, sortOrder } = getSortParams();
 
-    const data = Array.isArray(result) ? result : result?.data;
-    const meta =
-      !Array.isArray(result) && result?.meta
-        ? result.meta
-        : {
-            currentPage: page,
-            pageCount: 1,
-            isLastPage: true,
-          };
+    const isEndingSoon =
+      sortOption === "ending" ||
+      sortOption === "endingsoon" ||
+      sortOption === "ending-soon";
 
-    if (!data || !data.length) {
+    const filtersActive = Boolean(
+      searchQuery || tagFilter || activeOnly || isEndingSoon
+    );
+
+    let data = [];
+    let meta = {};
+
+    if (filtersActive) {
+      const allItems = await loadAllListings(sort, sortOrder);
+      data = allItems;
+      meta = { currentPage: 1, pageCount: 1, isLastPage: true };
+    } else {
+      const result = await getListings({
+        limit: PAGE_SIZE,
+        page,
+        sort,
+        sortOrder,
+      });
+      data = result.data || [];
+      meta = result.meta || {};
+    }
+
+    let filtered = data;
+
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter((item) => {
+        const title = item.title?.toLowerCase() || "";
+        const sellerName = item.seller?.name?.toLowerCase() || "";
+        return title.includes(q) || sellerName.includes(q);
+      });
+    }
+
+    if (tagFilter) {
+      const tagQ = tagFilter.toLowerCase();
+      filtered = filtered.filter((item) =>
+        Array.isArray(item.tags)
+          ? item.tags.some((t) => String(t).toLowerCase().includes(tagQ))
+          : false
+      );
+    }
+
+    if (activeOnly) {
+      const now = Date.now();
+      filtered = filtered.filter((item) => {
+        const end = new Date(item.endsAt).getTime();
+        return !Number.isNaN(end) && end > now;
+      });
+    }
+
+    if (isEndingSoon) {
+      const now = Date.now();
+      const windowMs = ENDING_WINDOW_HOURS * 60 * 60 * 1000;
+      const maxTime = now + windowMs;
+
+      filtered = filtered.filter((item) => {
+        const end = new Date(item.endsAt).getTime();
+        return !Number.isNaN(end) && end > now && end <= maxTime;
+      });
+      filtered.sort((a, b) => {
+        const aEnd = new Date(a.endsAt).getTime();
+        const bEnd = new Date(b.endsAt).getTime();
+        return aEnd - bEnd;
+      });
+    }
+
+    if (!filtered.length) {
       grid.textContent = "No listings found.";
       updatePagination(meta);
       return;
     }
 
-    data.forEach((listing) => {
+    filtered.forEach((listing) => {
       const card = createListingCard(listing);
       grid.appendChild(card);
     });
@@ -177,6 +293,52 @@ async function initListingsPage(page = 1) {
     console.error(error);
     grid.textContent = "Could not load listings.";
   }
+}
+
+// filter
+if (searchInput) {
+  searchInput.addEventListener("input", (event) => {
+    searchQuery = event.target.value.trim();
+    allListingsCache = null;
+    initListingsPage(1);
+  });
+}
+
+if (tagsInput) {
+  tagsInput.addEventListener("input", (event) => {
+    tagFilter = event.target.value.trim();
+    allListingsCache = null;
+    initListingsPage(1);
+  });
+}
+
+if (activeToggle) {
+  const track = activeToggle.querySelector("[data-track]");
+  const knob = activeToggle.querySelector("[data-knob]");
+
+  activeToggle.addEventListener("click", () => {
+    activeOnly = !activeOnly;
+    activeToggle.setAttribute("aria-pressed", String(activeOnly));
+
+    if (track && knob) {
+      track.classList.toggle("bg-[#F7F3EB]", !activeOnly);
+      track.classList.toggle("bg-[#1B1B1C]/20", activeOnly);
+
+      knob.classList.toggle("translate-x-0", !activeOnly);
+      knob.classList.toggle("translate-x-4", activeOnly);
+    }
+
+    allListingsCache = null;
+    initListingsPage(1);
+  });
+}
+
+if (sortSelect) {
+  sortSelect.addEventListener("change", () => {
+    sortOption = sortSelect.value || "newest";
+    allListingsCache = null;
+    initListingsPage(1);
+  });
 }
 
 // pagination button handler
@@ -193,6 +355,32 @@ if (nextBtn) {
     if (currentPage < pageCount) {
       initListingsPage(currentPage + 1);
     }
+  });
+}
+
+if (clearBtn) {
+  clearBtn.addEventListener("click", () => {
+    searchQuery = "";
+    tagFilter = "";
+    activeOnly = false;
+    sortOption = "newest";
+    allListingsCache = null;
+
+    if (searchInput) searchInput.value = "";
+    if (tagsInput) tagsInput.value = "";
+    if (sortSelect) sortSelect.value = "newest";
+    if (activeToggle) {
+      activeToggle.setAttribute("aria-pressed", "false");
+      const track = activeToggle.querySelector("[data-track]");
+      const knob = activeToggle.querySelector("[data-knob]");
+      if (track && knob) {
+        track.classList.add("bg-[#F7F3EB]");
+        track.classList.remove("bg-[#1B1B1C]/20");
+        knob.classList.add("translate-x-0");
+        knob.classList.remove("translate-x-4");
+      }
+    }
+    initListingsPage(1);
   });
 }
 

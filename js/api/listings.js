@@ -2,13 +2,18 @@
 import { API_BASE } from "./config.js";
 import { getAuthToken } from "../utils/guards.js";
 
-export async function getListings({ limit = 20, page = 1 } = {}) {
+export async function getListings({
+  limit = 20,
+  page = 1,
+  sort = "created",
+  sortOrder = "desc",
+} = {}) {
   const url = new URL(`${API_BASE}/auction/listings`);
 
   url.searchParams.set(`_seller`, "true");
   url.searchParams.set(`_bids`, "true");
-  url.searchParams.set(`sort`, "endsAt");
-  url.searchParams.set(`sortOrder`, "asc");
+  url.searchParams.set(`sort`, sort);
+  url.searchParams.set(`sortOrder`, sortOrder);
   url.searchParams.set(`limit`, String(limit));
   url.searchParams.set("page", String(page));
 
@@ -29,5 +34,5 @@ export async function getListings({ limit = 20, page = 1 } = {}) {
   }
 
   const body = await response.json();
-  return body;
+  return body ?? { data: [], meta: {} };
 }

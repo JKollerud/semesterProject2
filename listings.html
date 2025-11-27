@@ -12,10 +12,10 @@
       rel="stylesheet" />
   </head>
   <body class="min-h-screen bg-[#FAF9F6] flex flex-col">
-    <header class="w-full bg-[#E7E1D8]">
+    <header class="w-full bg-[#E7E1D8] border-b border-[#D2C8BC]">
       <div
-        class="max-w-5xl mx-auto flex items-center justify-between px-4 py-4">
-        <div class="relative">
+        class="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between gap-4">
+        <div class="relative shrink-0">
           <button
             id="nav-menu-button"
             class="flex flex-col justify-between w-8 h-6 focus:outline-none"
@@ -27,7 +27,7 @@
           </button>
           <nav
             id="nav-main-menu"
-            class="hidden absolute left-0 mt-10 w-[20rem] max-w-[90vw] bg-[#E7E1D8] border border-[#D2C8BC] rounded-xl shadow-xl z-40 flex flex-col">
+            class="hidden absolute left-0 mt-10 w-[20rem] max-w-[90vw] bg-[#E7E1D8] border border-[#D2C8BC] rounded-xl shadow-xl z-40 flex-col">
             <div
               class="flex items-center justify-between px-6 py-4 border-b border-[#D2C8BC]">
               <button
@@ -39,14 +39,19 @@
             </div>
             <div class="px-6 py-6 space-y-4">
               <a
+                href="index.html"
+                class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
+                Home
+              </a>
+              <a
                 href="listings.html"
                 class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
                 Auctions
               </a>
               <a
-                href="contact.html"
+                href="create-listing.html"
                 class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
-                Contact us
+                Sell
               </a>
             </div>
             <div class="border-t border-[#D2C8BC] px-6 py-4 space-y-2">
@@ -72,10 +77,20 @@
             </div>
           </nav>
         </div>
-        <a href="index.html" class="font-playfair text-2xl text-[#1B1B1C]">
-          Nordholm
-        </a>
-        <div class="relative">
+        <div class="flex flex-col items-center flex-1 text-center">
+          <a
+            href="index.html"
+            class="font-playfair text-2xl md:text-5xl text-[#1B1B1C] leading-none">
+            Nordholm
+          </a>
+          <nav
+            class="hidden md:flex items-center gap-6 mt-2 text-sm font-worksans text-[#4B4B4C]">
+            <a href="index.html" class="hover:text-[#1B1B1C]">Home</a>
+            <a href="listings.html" class="hover:text-[#1B1B1C]">Auctions</a>
+            <a href="create-listing.html" class="hover:text-[#1B1B1C]">Sell</a>
+          </nav>
+        </div>
+        <div class="relative shrink-0">
           <button
             id="nav-user-button"
             class="flex flex-col items-center gap-1 focus:outline-none"
@@ -111,9 +126,86 @@
       id="nav-backdrop"
       class="hidden fixed inset-0 bg-black/30 backdrop-blur-sm z-30"></div>
     <main class="flex-1">
+      <section class="w-full bg-[#E7E1D8] border-b border-[#D2C8BC]">
+        <div
+          class="max-w-5xl mx-auto px-4 py-5 flex flex-wrap items-end justify-between gap-6">
+          <div class="flex flex-wrap items-end gap-4">
+            <a
+              href="create-listing.html"
+              class="inline-flex items-center rounded-full bg-[#4F6E60] px-4 py-2 text-xs sm:text-sm font-worksans text-[#F8F5EE] hover:bg-[#3E574C] transition">
+              <span class="mr-1 text-base leading-none">+</span>
+              <span>Create listing</span>
+            </a>
+            <div class="flex flex-col gap-1">
+              <label
+                for="filter-search"
+                class="text-[11px] sm:text-xs font-worksans text-[#4B4B4C]">
+                Search listings
+              </label>
+              <input
+                id="filter-search"
+                type="text"
+                class="h-8 w-36 sm:w-44 rounded-md border border-[#D2C8BC] bg-[#FAF9F6] px-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#1B1B1C]/40" />
+            </div>
+            <div class="flex flex-col gap-1">
+              <label
+                for="filter-tags"
+                class="text-[11px] sm:text-xs font-worksans text-[#4B4B4C]">
+                Filter by tags
+              </label>
+              <input
+                id="filter-tags"
+                type="text"
+                class="h-8 w-32 sm:w-40 rounded-md border border-[#D2C8BC] bg-[#FAF9F6] px-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#1B1B1C]/40" />
+            </div>
+          </div>
+          <div class="flex flex-wrap items-end gap-4">
+            <div class="flex flex-col gap-1">
+              <span class="text-[11px] sm:text-xs font-worksans text-[#4B4B4C]">
+                Show active listings only
+              </span>
+              <button
+                id="filter-active"
+                type="button"
+                class="inline-flex items-center gap-2 font-worksans text-[#4B4B4C] text-xs sm:text-sm"
+                aria-pressed="false">
+                <span
+                  data-track
+                  class="inline-flex h-5 w-9 items-center rounded-full bg-[#F7F3EB] border border-[#D2C8BC] px-0.5 transition-colors">
+                  <span
+                    data-knob
+                    class="h-4 w-4 rounded-full bg-[#4F6E60] transform translate-x-0 transition-transform"></span>
+                </span>
+              </button>
+            </div>
+            <button
+              id="filter-clear"
+              type="button"
+              class="inline-flex items-center rounded-full border border-[#D2C8BC] bg-[#F7F3EB] px-4 py-2 text-xs sm:text-sm font-worksans text-[#4B4B4C] hover:bg-[#E7E1D8] transition">
+              Clear filters
+            </button>
+          </div>
+        </div>
+      </section>
       <section class="max-w-5xl mx-auto px-4 py-10">
-        <h1 class="font-playfair text-3xl text-[#1B1B1C] mb-6">Listings</h1>
-        <div class="grid gap-6 grid-cols-2 lg:grid-cols-3" id="listings-grid">
+        <div
+          class="mt-5 mb-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h1 class="font-playfair text-3xl text-[#1B1B1C]">Listings</h1>
+          <div
+            class="flex items-center gap-2 text-xs sm:text-sm font-worksans text-[#4B4B4C]">
+            <span>Sort by</span>
+            <select
+              id="sort-select"
+              class="h-8 rounded-full border border-[#D2C8BC] bg-[#F7F3EB] px-3 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-[#1B1B1C]/40">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="ending">Ending soon</option>
+            </select>
+          </div>
+        </div>
+        <div
+          class="grid gap-6 grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+          id="listings-grid">
           <template id="listing-card-template">
             <article
               class="group overflow-hidden rounded-2xl bg-[#FAF9F6] border border-[#E0D6C8] shadow-sm hover:-translate-y-1 transition cursor-pointer">
@@ -170,11 +262,11 @@
         </div>
         <nav
           id="listings-pagination"
-          class="mt-8 flex items-center justify-center gap-4 font-worksans text-sm text-[#4B4B4C]">
+          class="mt-8 flex items-center justify-center gap-4 font-worksans">
           <button
             id="pagination-prev"
             type="button"
-            class="px-3 py-1 rounded-full border border-[#D2C8BC] bg-[#F7F3EB] hover:bg-[#E7E1D8] disabled:opacity-40 disabled:cursor-not-allowed">
+            class="px-3 py-1 rounded-full border border-[#D2C8BC] bg-[#F7F3EB] text-xs text-[#4B4B4C] disabled:opacity-40">
             Previous
           </button>
           <span id="pagination-info" class="text-xs sm:text-sm">
@@ -183,7 +275,7 @@
           <button
             id="pagination-next"
             type="button"
-            class="px-3 py-1 rounded-full border border-[#D2C8BC] bg-[#F7F3EB] hover:bg-[#E7E1D8] disabled:opacity-40 disabled:cursor-not-allowed">
+            class="px-3 py-1 rounded-full border border-[#D2C8BC] bg-[#F7F3EB] text-xs text-[#4B4B4C] disabled:opacity-40">
             Next
           </button>
         </nav>
