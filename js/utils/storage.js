@@ -1,5 +1,5 @@
 // localStorage helpers
-const STORAGE_KEY = 'nauth';
+const STORAGE_KEY = "nauth";
 
 // save token + user object
 export function saveAuth({ accessToken, user }) {

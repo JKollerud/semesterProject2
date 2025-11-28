@@ -12,13 +12,13 @@
       rel="stylesheet" />
   </head>
   <body class="flex min-h-screen flex-col bg-[#FAF9F6]">
-    <header class="w-full bg-[#E7E1D8]">
+    <header class="w-full bg-[#E7E1D8] border-b border-[#D2C8BC]">
       <div
-        class="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-        <div class="relative">
+        class="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between gap-4">
+        <div class="relative shrink-0">
           <button
             id="nav-menu-button"
-            class="flex h-6 w-8 flex-col justify-between focus:outline-none"
+            class="flex flex-col justify-between w-8 h-6 focus:outline-none"
             aria-label="Open menu"
             type="button">
             <span class="block h-[2px] bg-[#4F6E60]"></span>
@@ -27,29 +27,34 @@
           </button>
           <nav
             id="nav-main-menu"
-            class="absolute left-0 z-40 mt-10 flex hidden w-[20rem] max-w-[90vw] flex-col rounded-xl border border-[#D2C8BC] bg-[#E7E1D8] shadow-xl">
+            class="hidden absolute left-0 mt-10 w-[20rem] max-w-[90vw] bg-[#E7E1D8] border border-[#D2C8BC] rounded-xl shadow-xl z-40 flex-col">
             <div
-              class="flex items-center justify-between border-b border-[#D2C8BC] px-6 py-4">
+              class="flex items-center justify-between px-6 py-4 border-b border-[#D2C8BC]">
               <button
                 id="nav-menu-close"
                 type="button"
-                class="text-2xl leading-none text-[#4F6E60] focus:outline-none">
+                class="text-2xl text-[#4F6E60] leading-none focus:outline-none">
                 &times;
               </button>
             </div>
-            <div class="space-y-4 px-6 py-6">
+            <div class="px-6 py-6 space-y-4">
+              <a
+                href="index.html"
+                class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
+                Home
+              </a>
               <a
                 href="listings.html"
                 class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
                 Auctions
               </a>
               <a
-                href="contact.html"
+                href="create-listing.html"
                 class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
-                Contact us
+                Sell
               </a>
             </div>
-            <div class="space-y-2 border-t border-[#D2C8BC] px-6 py-4">
+            <div class="border-t border-[#D2C8BC] px-6 py-4 space-y-2">
               <a
                 href="login.html"
                 data-auth-visible="logged-out"
@@ -66,41 +71,51 @@
                 type="button"
                 data-logout
                 data-auth-visible="logged-in"
-                class="block hidden text-left font-worksans text-sm text-[#9A3B30] hover:opacity-80">
+                class="hidden block font-worksans text-sm text-left text-[#9A3B30] hover:opacity-80">
                 Log out
               </button>
             </div>
           </nav>
         </div>
-        <a href="index.html" class="font-playfair text-2xl text-[#1B1B1C]">
-          Nordholm
-        </a>
-        <div class="relative">
+        <div class="flex flex-col items-center flex-1 text-center">
+          <a
+            href="index.html"
+            class="font-playfair text-2xl md:text-5xl text-[#1B1B1C] leading-none">
+            Nordholm
+          </a>
+          <nav
+            class="hidden md:flex items-center gap-6 mt-2 text-sm font-worksans text-[#4B4B4C]">
+            <a href="index.html" class="hover:text-[#1B1B1C]">Home</a>
+            <a href="listings.html" class="hover:text-[#1B1B1C]">Auctions</a>
+            <a href="create-listing.html" class="hover:text-[#1B1B1C]">Sell</a>
+          </nav>
+        </div>
+        <div class="relative shrink-0">
           <button
             id="nav-user-button"
             class="flex flex-col items-center gap-1 focus:outline-none"
             aria-label="User menu"
             type="button">
             <div
-              class="flex h-7 w-7 items-center justify-center rounded-full bg-[#4F6E60]">
+              class="w-7 h-7 rounded-full bg-[#4F6E60] flex items-center justify-center">
               <span class="text-sm font-semibold text-[#F8F5EE]">U</span>
             </div>
             <span
               id="nav-username"
-              class="hidden font-worksans text-xs text-[#1B1B1C]"></span>
+              class="hidden text-xs font-worksans text-[#1B1B1C]"></span>
           </button>
           <div
             id="nav-user-menu"
-            class="absolute right-0 z-20 mt-10 hidden w-40 rounded-xl border border-[#D2C8BC] bg-[#F7F3EB] py-2 shadow-lg">
+            class="hidden absolute right-0 mt-10 w-40 bg-[#F7F3EB] border border-[#D2C8BC] rounded-xl shadow-lg py-2 z-20">
             <a
               href="profile.html"
-              class="block px-4 font-worksans text-sm text-[#1B1B1C] hover:bg-[#E7E1D8]">
+              class="block px-4 text-sm font-worksans text-[#1B1B1C] hover:bg-[#E7E1D8]">
               My profile
             </a>
             <button
               type="button"
               data-logout
-              class="block w-full px-4 py-2 text-left font-worksans text-sm text-[#9A3B30] hover:bg-[#FDECEC]">
+              class="block w-full text-left px-4 py-2 text-sm font-worksans text-[#9A3B30] hover:bg-[#FDECEC]">
               Log out
             </button>
           </div>
@@ -109,7 +124,7 @@
     </header>
     <div
       id="nav-backdrop"
-      class="fixed inset-0 z-30 hidden bg-black/30 backdrop-blur-sm"></div>
+      class="hidden fixed inset-0 bg-black/30 backdrop-blur-sm z-30"></div>
     <main class="flex flex-1 flex-col items-center">
       <div class="mt-12 w-full max-w-sm rounded-2xl bg-[#E7E1D8] p-8 shadow-md">
         <h1 class="mb-8 text-center font-playfair text-4xl text-[#1B1B1C]">
@@ -126,7 +141,6 @@
           </div>
           <div class="flex flex-col">
             <label class="mb-1 text-sm text-[#1B1B1C]">Password</label>
-
             <div class="relative">
               <input
                 id="password"

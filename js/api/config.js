@@ -1,10 +1,12 @@
 // API base here + fetch
-export const API_BASE = 'https://v2.api.noroff.dev';
+export const API_BASE = "https://v2.api.noroff.dev";
+
+export const API_KEY = "9d99adb5-d4da-460d-b332-3ed74edef037";
 
 export async function apiFetch(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...(options.headers || {}),
     },
     ...options,
@@ -13,7 +15,7 @@ export async function apiFetch(path, options = {}) {
   const payload = await res.json();
 
   if (!res.ok) {
-    const msg = payload?.errors?.[0]?.message || 'Something went wrong';
+    const msg = payload?.errors?.[0]?.message || "Something went wrong";
     throw new Error(msg);
   }
 

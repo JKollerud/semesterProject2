@@ -31,7 +31,7 @@ let allListingsCache = null;
 const MAX_FILTER_ITEMS = 600;
 
 // card
-function createListingCard(listing) {
+export function createListingCard(listing) {
   const card = template.content.firstElementChild.cloneNode(true);
 
   // elements inside card

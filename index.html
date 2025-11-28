@@ -11,11 +11,11 @@
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap"
       rel="stylesheet" />
   </head>
-  <body>
-    <header class="w-full bg-[#E7E1D8]">
+  <body class="min-h-screen bg-[#FAF9F6] flex flex-col">
+    <header class="w-full bg-[#E7E1D8] border-b border-[#D2C8BC]">
       <div
-        class="max-w-5xl mx-auto flex items-center justify-between px-4 py-4">
-        <div class="relative">
+        class="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between gap-4">
+        <div class="relative shrink-0">
           <button
             id="nav-menu-button"
             class="flex flex-col justify-between w-8 h-6 focus:outline-none"
@@ -27,7 +27,7 @@
           </button>
           <nav
             id="nav-main-menu"
-            class="hidden absolute left-0 mt-10 w-[20rem] max-w-[90vw] bg-[#E7E1D8] border border-[#D2C8BC] rounded-xl shadow-xl z-40 flex flex-col">
+            class="hidden absolute left-0 mt-10 w-[20rem] max-w-[90vw] bg-[#E7E1D8] border border-[#D2C8BC] rounded-xl shadow-xl z-40 flex-col">
             <div
               class="flex items-center justify-between px-6 py-4 border-b border-[#D2C8BC]">
               <button
@@ -39,14 +39,19 @@
             </div>
             <div class="px-6 py-6 space-y-4">
               <a
+                href="index.html"
+                class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
+                Home
+              </a>
+              <a
                 href="listings.html"
                 class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
                 Auctions
               </a>
               <a
-                href="contact.html"
+                href="create-listing.html"
                 class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
-                Contact us
+                Sell
               </a>
             </div>
             <div class="border-t border-[#D2C8BC] px-6 py-4 space-y-2">
@@ -72,10 +77,20 @@
             </div>
           </nav>
         </div>
-        <a href="index.html" class="font-playfair text-2xl text-[#1B1B1C]">
-          Nordholm
-        </a>
-        <div class="relative">
+        <div class="flex flex-col items-center flex-1 text-center">
+          <a
+            href="index.html"
+            class="font-playfair text-2xl md:text-5xl text-[#1B1B1C] leading-none">
+            Nordholm
+          </a>
+          <nav
+            class="hidden md:flex items-center gap-6 mt-2 text-sm font-worksans text-[#4B4B4C]">
+            <a href="index.html" class="hover:text-[#1B1B1C]">Home</a>
+            <a href="listings.html" class="hover:text-[#1B1B1C]">Auctions</a>
+            <a href="create-listing.html" class="hover:text-[#1B1B1C]">Sell</a>
+          </nav>
+        </div>
+        <div class="relative shrink-0">
           <button
             id="nav-user-button"
             class="flex flex-col items-center gap-1 focus:outline-none"
@@ -83,15 +98,18 @@
             type="button">
             <div
               class="w-7 h-7 rounded-full bg-[#4F6E60] flex items-center justify-center">
-              <span class="text-sm font-semibold text-[#F8F5EE]">N</span>
+              <span class="text-sm font-semibold text-[#F8F5EE]">U</span>
             </div>
             <span
               id="nav-username"
               class="hidden text-xs font-worksans text-[#1B1B1C]"></span>
+            <span
+              id="nav-user-credits"
+              class="hidden text-xs font-worksans text-[#4B4B4C]"></span>
           </button>
           <div
             id="nav-user-menu"
-            class="hidden absolute right-0 mt-6 w-40 bg-[#F7F3EB] border border-[#D2C8BC] rounded-xl shadow-lg py-2 z-20">
+            class="hidden absolute right-0 mt-10 w-40 bg-[#F7F3EB] border border-[#D2C8BC] rounded-xl shadow-lg py-2 z-20">
             <a
               href="profile.html"
               class="block px-4 text-sm font-worksans text-[#1B1B1C] hover:bg-[#E7E1D8]">
@@ -110,6 +128,104 @@
     <div
       id="nav-backdrop"
       class="hidden fixed inset-0 bg-black/30 backdrop-blur-sm z-30"></div>
+    <main class="flex-1">
+      <section class="relative w-full">
+        <img
+          src="./assets/images/homepageNature.jpg"
+          alt="Nature painting"
+          class="w-full h-[320px] md:h-[420px] object-cover opacity-80" />
+
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-black/40 to-black/10 flex items-center">
+          <div class="max-w-5xl px-6 text-white space-y-4">
+            <h1 class="font-playfair text-3xl md:text-5xl">
+              Nordholm Auction House
+            </h1>
+            <p class="max-w-md font-worksans text-sm md:text-base opacity-90">
+              At Nordholm, we bring together timeless artworks and discerning
+              collectors in a setting defined by calm, Nordic elegance.
+            </p>
+
+            <a
+              href="listings.html"
+              class="inline-block mt-3 bg-[#4F6E60] hover:bg-[#3E574C] text-[#F8F5EE] px-5 py-2 rounded-full font-worksans text-sm transition">
+              Browse Items
+            </a>
+          </div>
+        </div>
+      </section>
+      <section class="max-w-5xl mx-auto px-4 py-14">
+        <header class="mb-8 border-b border-[#E0D6C8] pb-4">
+          <h2 class="font-playfair text-2xl md:text-3xl text-[#1B1B1C]">
+            Newest auctions
+          </h2>
+        </header>
+        <div class="overflow-hidden">
+          <div
+            id="trending-track"
+            class="flex transition-transform duration-300 ease-out"></div>
+        </div>
+        <div
+          id="trending-dots"
+          class="flex items-center justify-center gap-2 mt-6"></div>
+        <div
+          id="trending-grid"
+          class="grid gap-6 grid-cols-2 md:grid-cols-3"></div>
+        <template id="listing-card-template">
+          <article
+            class="group overflow-hidden rounded-2xl bg-[#FAF9F6] border border-[#E0D6C8] shadow-sm hover:-translate-y-1 transition cursor-pointer">
+            <div
+              class="relative h-48 bg-[#4F6E60] flex items-center justify-center">
+              <img
+                data-image
+                src="./assets/icons/placeholder-listing.svg"
+                alt="Auction item image"
+                class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition" />
+              <div
+                class="absolute top-3 left-3 rounded-full bg-[#F7F3EB]/90 px-3 py-1 text-xs font-worksans text-[#1B1B1C]"
+                data-bids>
+                0 bids
+              </div>
+              <div
+                class="absolute bottom-3 left-3 rounded-full bg-[#FDECEC]/95 px-3 py-1 text-xs font-worksans text-[#893B2F]"
+                data-time-remaining>
+                In about 15 hours
+              </div>
+            </div>
+            <div class="p-5 space-y-4">
+              <h2 class="font-playfair text-xl text-[#1B1B1C]" data-title>
+                Auction item
+              </h2>
+              <dl class="space-y-2 text-xs font-worksans text-[#4B4B4C]">
+                <div class="flex justify-between gap-4">
+                  <dt class="text-[#9B9287]">By:</dt>
+                  <dd class="text-right">
+                    <a
+                      class="text-[#4F6E8F] hover:text-[#1B1B1C] underline"
+                      data-seller-link>
+                      <span data-seller-name>Seller Username</span>
+                    </a>
+                  </dd>
+                </div>
+                <div class="flex justify-between gap-4">
+                  <dt class="text-[#9B9287]">Ends:</dt>
+                  <dd class="text-right text-[#893B2F]" data-ends-at>
+                    December 10, 2025
+                  </dd>
+                </div>
+                <div class="flex justify-between gap-4">
+                  <dt class="text-[#9B9287]">Current bid:</dt>
+                  <dd class="text-right text-[#1B1B1C]">
+                    <span class="font-semibold" data-current-bid>100</span>
+                    Credits
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </article>
+        </template>
+      </section>
+    </main>
     <script type="module" src="./js/pages/index.js"></script>
     <script type="module" src="./js/utils/nav.js"></script>
   </body>

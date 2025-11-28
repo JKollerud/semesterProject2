@@ -12,10 +12,10 @@
       rel="stylesheet" />
   </head>
   <body class="min-h-screen bg-[#FAF9F6] flex flex-col">
-    <header class="w-full bg-[#E7E1D8]">
+    <header class="w-full bg-[#E7E1D8] border-b border-[#D2C8BC]">
       <div
-        class="max-w-5xl mx-auto flex items-center justify-between px-4 py-4">
-        <div class="relative">
+        class="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between gap-4">
+        <div class="relative shrink-0">
           <button
             id="nav-menu-button"
             class="flex flex-col justify-between w-8 h-6 focus:outline-none"
@@ -27,7 +27,7 @@
           </button>
           <nav
             id="nav-main-menu"
-            class="hidden absolute left-0 mt-10 w-[20rem] max-w-[90vw] bg-[#E7E1D8] border border-[#D2C8BC] rounded-xl shadow-xl z-40 flex flex-col">
+            class="hidden absolute left-0 mt-10 w-[20rem] max-w-[90vw] bg-[#E7E1D8] border border-[#D2C8BC] rounded-xl shadow-xl z-40 flex-col">
             <div
               class="flex items-center justify-between px-6 py-4 border-b border-[#D2C8BC]">
               <button
@@ -39,14 +39,19 @@
             </div>
             <div class="px-6 py-6 space-y-4">
               <a
+                href="index.html"
+                class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
+                Home
+              </a>
+              <a
                 href="listings.html"
                 class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
                 Auctions
               </a>
               <a
-                href="contact.html"
+                href="create-listing.html"
                 class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
-                Contact us
+                Sell
               </a>
             </div>
             <div class="border-t border-[#D2C8BC] px-6 py-4 space-y-2">
@@ -72,10 +77,20 @@
             </div>
           </nav>
         </div>
-        <a href="index.html" class="font-playfair text-2xl text-[#1B1B1C]">
-          Nordholm
-        </a>
-        <div class="relative">
+        <div class="flex flex-col items-center flex-1 text-center">
+          <a
+            href="index.html"
+            class="font-playfair text-2xl md:text-5xl text-[#1B1B1C] leading-none">
+            Nordholm
+          </a>
+          <nav
+            class="hidden md:flex items-center gap-6 mt-2 text-sm font-worksans text-[#4B4B4C]">
+            <a href="index.html" class="hover:text-[#1B1B1C]">Home</a>
+            <a href="listings.html" class="hover:text-[#1B1B1C]">Auctions</a>
+            <a href="create-listing.html" class="hover:text-[#1B1B1C]">Sell</a>
+          </nav>
+        </div>
+        <div class="relative shrink-0">
           <button
             id="nav-user-button"
             class="flex flex-col items-center gap-1 focus:outline-none"
@@ -83,7 +98,7 @@
             type="button">
             <div
               class="w-7 h-7 rounded-full bg-[#4F6E60] flex items-center justify-center">
-              <span class="text-sm font-semibold text-[#F8F5EE]">N</span>
+              <span class="text-sm font-semibold text-[#F8F5EE]">U</span>
             </div>
             <span
               id="nav-username"
