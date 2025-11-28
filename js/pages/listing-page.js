@@ -15,7 +15,7 @@ const totalBidsEl = document.querySelector("#listing-total-bids");
 const highestBidEl = document.querySelector("#listing-highest-bid");
 const endsAtEl = document.querySelector("#listing-ends-at");
 const descEl = document.querySelector("#listing-description");
-
+const imageDotsEl = document.querySelector("#listing-image-dots");
 const bidHistoryEmptyEl = document.querySelector("#bid-history-empty");
 const bidHistoryTableEl = document.querySelector("#bid-history-table");
 const bidHistoryBodyEl = document.querySelector("#bid-history-body");
@@ -75,10 +75,17 @@ async function fetchListing(id) {
   const response = await fetch(url.href, { headers });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch listing");
+    let errorBody = null;
+    try {
+      errorBody = await response.json();
+    } catch {}
+    throw new Error(
+      errorBody?.errors?.[0]?.message || "Failed to fetch listing"
+    );
   }
 
-  return response.json();
+  const body = await response.json();
+  return body?.data ?? body;
 }
 
 // rendering
@@ -89,16 +96,59 @@ function renderListing(listing) {
   titleEl.textContent = title || "Listing";
 
   // image
-  const imageUrl =
-    Array.isArray(media) && media[0]?.url
-      ? media[0].url
-      : "./assets/icons/placeholder-listing.svg";
+  const placeholder = "./assets/icons/placeholder-listing.svg";
 
-  imgEl.src = imageUrl;
-  imgEl.alt = title || "Listing image";
-  imgEl.onerror = () => {
-    imgEl.src = "./assets/icons/placeholder-listing.svg";
-  };
+  // valid images
+  const images = Array.isArray(media) ? media.filter((m) => m && m.url) : [];
+
+  // fallback placeholder img
+  if (!images.length) {
+    images.push({ url: placeholder, alt: title || "Listing image" });
+  }
+
+  let currentIndex = 0;
+
+  function showImage(index) {
+    const image = images[index];
+    if (!image || !imgEl) return;
+
+    imgEl.src = image.url;
+    imgEl.alt = image.alt || title || "Listing image";
+    imgEl.onerror = () => {
+      imgEl.src = placeholder;
+    };
+
+    // update dots
+    if (imageDotsEl) {
+      [...imageDotsEl.children].forEach((dot, i) => {
+        dot.classList.toggle("bg-[#1B1B1C]/40", i === index);
+        dot.classList.toggle("bg-[#1B1B1C]/10", i !== index);
+      });
+    }
+  }
+
+  // make dots if images > 1
+  if (imageDotsEl) {
+    imageDotsEl.innerHTML = "";
+
+    if (images.length > 1) {
+      images.forEach((_, index) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "h-1.5 w-1.5 rounded-full bg-[#1B1B1C]/10 transition";
+        dot.setAttribute("aria-label", `Show image ${index + 1}`);
+
+        dot.addEventListener("click", () => {
+          currentIndex = index;
+          showImage(index);
+        });
+
+        imageDotsEl.appendChild(dot);
+      });
+    }
+  }
+
+  showImage(0);
 
   // seller
   const sellerName = seller?.name || "Unknown seller";
@@ -132,13 +182,17 @@ function renderListing(listing) {
       (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
     );
     bidHistoryBodyEl.innerHTML = "";
+
     sorted.forEach((bid) => {
       const tr = document.createElement("tr");
       tr.className = "border-t border-[#F0E7DA]";
 
       const nameTd = document.createElement("td");
       nameTd.className = "py-2 pr-4";
-      nameTd.textContent = bid.bidderName || "Unknown";
+      const bidderName =
+        bid.bidderName || bid.bidder?.name || bid.bidder || "Unknown";
+
+      nameTd.textContent = bidderName;
 
       const dateTd = document.createElement("td");
       dateTd.className = "py-2 pr-4 text-right";
