@@ -1,9 +1,12 @@
 // this is for listing-page.html
 import { API_BASE } from "../api/config.js";
-import { getAuthToken } from "../utils/guards.js";
+import { getAuthToken, getAuthUser } from "../utils/guards.js";
+import { placeBid } from "../api/listings.js";
 
 const params = new URLSearchParams(window.location.search);
 const listingId = params.get("id");
+
+let currentListing = null;
 
 // dom ele
 const backBtn = document.querySelector("#listing-back");
@@ -62,6 +65,18 @@ function getHighestBid(listing) {
   return Math.max(...listing.bids.map((b) => b.amount));
 }
 
+function setBidMessage(message, type = "error") {
+  if (!bidMessageEl) return;
+  bidMessageEl.textContent = message;
+  bidMessageEl.classList.remove("hidden");
+  bidMessageEl.classList.remove("text-[#4F6E60]", "text-[#893B2F]");
+  if (type === "success") {
+    bidMessageEl.classList.add("text-[#4F6E60]");
+  } else {
+    bidMessageEl.classList.add("text-[#893B2F]");
+  }
+}
+
 // api
 async function fetchListing(id) {
   const url = new URL(`${API_BASE}/auction/listings/${encodeURIComponent(id)}`);
@@ -88,8 +103,51 @@ async function fetchListing(id) {
   return body?.data ?? body;
 }
 
+// bid based on state
+function setupBidForm(listing) {
+  if (!bidForm || !bidAmountInput || !bidSubmitBtn) return;
+
+  const token = getAuthToken();
+  const endTime = new Date(listing.endsAt).getTime();
+  const isEnded = !Number.isNaN(endTime) && endTime <= Date.now();
+
+  bidAmountInput.value = "";
+  bidAmountInput.min = "1";
+  bidAmountInput.disabled = true;
+  bidSubmitBtn.disabled = true;
+  bidMessageEl.classList.add("hidden");
+
+  if (!token) {
+    setBidMessage("Log in to place a bid.");
+    return;
+  }
+
+  const authUser = getAuthUser();
+  const loggedInName = authUser?.name?.toLowerCase();
+  const sellerName = listing.seller?.name?.toLowerCase();
+
+  if (loggedInName && sellerName && loggedInName === sellerName) {
+    setBidMessage("You cannot bid on your own listing.");
+    return;
+  }
+
+  if (isEnded) {
+    setBidMessage("This auction has ended.");
+    return;
+  }
+
+  const highest = getHighestBid(listing);
+  const minimum = highest > 0 ? highest + 1 : 1;
+
+  bidAmountInput.disabled = false;
+  bidSubmitBtn.disabled = false;
+  bidAmountInput.min = String(minimum);
+  bidAmountInput.placeholder = `Min ${minimum}`;
+}
+
 // rendering
 function renderListing(listing) {
+  currentListing = listing;
   const { title, description, media, seller, endsAt, bids = [] } = listing;
 
   // title
@@ -211,10 +269,53 @@ function renderListing(listing) {
     bidHistoryEmptyEl.classList.add("hidden");
     bidHistoryTableEl.classList.remove("hidden");
   }
-  bidAmountInput.disabled = true;
-  bidSubmitBtn.disabled = true;
-  bidMessageEl.classList.remove("hidden");
-  bidMessageEl.textContent = "Bidding will be enabled in a later step.";
+  setupBidForm(listing);
+}
+
+// bid submit handler
+async function handleBidSubmit(event) {
+  event.preventDefault();
+  if (!currentListing || !bidAmountInput || !bidSubmitBtn) return;
+
+  const raw = bidAmountInput.value.trim();
+  const amount = Number(raw);
+
+  if (!raw || Number.isNaN(amount) || amount <= 0) {
+    setBidMessage("Please enter a valid bid amount.");
+    return;
+  }
+
+  const highest = getHighestBid(currentListing);
+  const minimum = highest > 0 ? highest + 1 : 1;
+
+  if (amount < minimum) {
+    setBidMessage(`Your bid must be at least ${minimum} Credits.`);
+    return;
+  }
+
+  const endTime = new Date(currentListing.endsAt).getTime();
+  if (!Number.isNaN(endTime) && endTime <= Date.now()) {
+    setBidMessage("This auction has ended.");
+    setupBidForm(currentListing);
+    return;
+  }
+
+  try {
+    bidSubmitBtn.disabled = true;
+    bidAmountInput.disabled = true;
+    setBidMessage("Placing your bid...", "success");
+
+    await placeBid(listingId, amount);
+    const updated = await fetchListing(listingId);
+    renderListing(updated);
+
+    setBidMessage("Your bid was placed successfully.", "success");
+  } catch (error) {
+    console.error(error);
+    setBidMessage(error.message || "Could not place bid. Please try again.");
+    bidSubmitBtn.disabled = false;
+    bidAmountInput.disabled = false;
+  }
 }
 
 // init
@@ -247,6 +348,10 @@ if (backBtn) {
       window.location.href = "listings.html";
     }
   });
+}
+
+if (bidForm) {
+  bidForm.addEventListener("submit", handleBidSubmit);
 }
 
 init();
