@@ -212,14 +212,21 @@
               </button>
             </form>
           </div>
-          <div class="hidden md:block bg-[#4F6E60]">
+          <div class="hidden md:block bg-[#cecece]">
             <img
-              src="./assets/images/hero-watch.jpg"
+              src="./assets/images/cnlBanner.jpg"
               alt="Watch close-up"
-              class="h-full w-full object-cover" />
+              class="h-full w-full object-cover opacity-50 blur-sm" />
           </div>
         </div>
       </section>
     </main>
+    <div
+      id="create-toast"
+      class="fixed bottom-5 right-5 hidden rounded-lg bg-[#1B1B1C] px-4 py-3 font-worksans text-[#FAF9F6] shadow-xl">
+      Listing created successfully. Redirecting…
+    </div>
+    <script type="module" src="./js/pages/create-listing.js"></script>
+    <script type="module" src="./js/utils/nav.js"></script>
   </body>
 </html>

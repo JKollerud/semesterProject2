@@ -72,3 +72,34 @@ export async function placeBid(listingId, amount) {
   const body = await response.json();
   return body ?? {};
 }
+
+export async function createListing(payload) {
+  const token = getAuthToken?.();
+  if (!token) {
+    throw new Error("You must be logged in to create a listing.");
+  }
+
+  const url = new URL(`${API_BASE}/auction/listings`);
+
+  const headers = {
+    "Content-Type": "application/json",
+    "X-Noroff-API-Key": API_KEY,
+    Authorization: `Bearer ${token}`,
+  };
+
+  const response = await fetch(url.href, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(
+      errorBody?.errors?.[0]?.message || "Failed to create listing"
+    );
+  }
+
+  const body = await response.json();
+  return body ?? {};
+}
