@@ -22,6 +22,7 @@ const imageDotsEl = document.querySelector("#listing-image-dots");
 const bidHistoryEmptyEl = document.querySelector("#bid-history-empty");
 const bidHistoryTableEl = document.querySelector("#bid-history-table");
 const bidHistoryBodyEl = document.querySelector("#bid-history-body");
+const editBtn = document.querySelector("#listing-edit");
 
 // bid form
 const bidForm = document.querySelector("#bid-form");
@@ -150,8 +151,41 @@ function renderListing(listing) {
   currentListing = listing;
   const { title, description, media, seller, endsAt, bids = [] } = listing;
 
+  const authUser = getAuthUser();
+  const loggedInName = authUser?.name?.toLowerCase();
+  const sellerName = seller?.name || "Unknown seller";
+  const sellerNameLower = sellerName.toLowerCase();
+
+  const endTime = new Date(endsAt).getTime();
+  const isEnded = !Number.isNaN(endTime) && endTime <= Date.now();
+
   // title
   titleEl.textContent = title || "Listing";
+
+  // show edit button only if this user is the seller
+  if (editBtn) {
+    if (
+      loggedInName &&
+      sellerNameLower &&
+      loggedInName === sellerNameLower &&
+      !isEnded
+    ) {
+      editBtn.classList.remove("hidden");
+      editBtn.disabled = false;
+
+      if (!editBtn.dataset.bound) {
+        editBtn.addEventListener("click", () => {
+          window.location.href = `edit-listing.html?id=${encodeURIComponent(
+            listingId
+          )}`;
+        });
+        editBtn.dataset.bound = "true";
+      }
+    } else {
+      editBtn.classList.add("hidden");
+      editBtn.disabled = true;
+    }
+  }
 
   // image
   const placeholder = "./assets/icons/placeholder-listing.svg";
@@ -209,7 +243,6 @@ function renderListing(listing) {
   showImage(0);
 
   // seller
-  const sellerName = seller?.name || "Unknown seller";
   sellerEl.textContent = sellerName;
   sellerEl.href = `profile.html?name=${encodeURIComponent(sellerName)}`;
 

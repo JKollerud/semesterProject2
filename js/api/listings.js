@@ -37,6 +37,7 @@ export async function getListings({
   return body ?? { data: [], meta: {} };
 }
 
+// place bid on post/listing
 export async function placeBid(listingId, amount) {
   if (!listingId) {
     throw new Error("Listing id is required");
@@ -50,6 +51,7 @@ export async function placeBid(listingId, amount) {
     "Content-type": "application/json",
     "X-Noroff-API-Key": API_KEY,
   };
+
   const token = getAuthToken?.();
 
   if (!token) {
@@ -73,6 +75,7 @@ export async function placeBid(listingId, amount) {
   return body ?? {};
 }
 
+// create post/listing
 export async function createListing(payload) {
   const token = getAuthToken?.();
   if (!token) {
@@ -102,4 +105,100 @@ export async function createListing(payload) {
 
   const body = await response.json();
   return body ?? {};
+}
+
+// fetch post/listing by id
+export async function getListingById(id) {
+  if (!id) throw new Error("Listing id is required");
+
+  const url = new URL(`${API_BASE}/auction/listings/${encodeURIComponent(id)}`);
+  url.searchParams.set("_seller", "true");
+  url.searchParams.set("_bids", "true");
+
+  const headers = {
+    "Content-Type": "application/json",
+    "X-Noroff-API-Key": API_KEY,
+  };
+
+  const token = getAuthToken?.();
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(url.href, { headers });
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(
+      errorBody?.errors?.[0]?.message || "Failed to fetch listing"
+    );
+  }
+
+  const body = await response.json();
+  return body?.data ?? body;
+}
+
+// update post/listing
+export async function updateListing(id, payload) {
+  if (!id) throw new Error("Listing id is required");
+
+  const token = getAuthToken?.();
+  if (!token) {
+    throw new Error("You must be logged in to update a listing.");
+  }
+
+  const url = new URL(`${API_BASE}/auction/listings/${encodeURIComponent(id)}`);
+
+  const headers = {
+    "Content-Type": "application/json",
+    "X-Noroff-API-Key": API_KEY,
+    Authorization: `Bearer ${token}`,
+  };
+
+  const response = await fetch(url.href, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(
+      errorBody?.errors?.[0]?.message || "Failed to update listing"
+    );
+  }
+
+  const body = await response.json();
+  return body ?? {};
+}
+
+// delete post/listing
+export async function deleteListing(id) {
+  if (!id) throw new Error("Listing id is required");
+
+  const token = getAuthToken?.();
+  if (!token) {
+    throw new Error("You must be logged in to delete a listing.");
+  }
+
+  const url = new URL(`${API_BASE}/auction/listings/${encodeURIComponent(id)}`);
+
+  const headers = {
+    "Content-Type": "application/json",
+    "X-Noroff-API-Key": API_KEY,
+    Authorization: `Bearer ${token}`,
+  };
+
+  const response = await fetch(url.href, {
+    method: "DELETE",
+    headers,
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(
+      errorBody?.errors?.[0]?.message || "Failed to delete listing"
+    );
+  }
+  return true;
 }

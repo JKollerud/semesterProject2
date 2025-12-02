@@ -145,9 +145,21 @@
             class="font-playfair text-2xl sm:text-3xl text-[#1B1B1C]">
             Loading listing...
           </h1>
-          <p
-            id="listing-status"
-            class="text-xs sm:text-sm font-worksans text-[#4B4B4C]"></p>
+          <div class="flex flex-col items-start md:items-end gap-2">
+            <p
+              id="listing-status"
+              class="text-xs sm:text-sm font-worksans text-[#4B4B4C]"></p>
+            <button
+              type="button"
+              id="listing-edit"
+              class="hidden inline-flex items-center gap-2 rounded-full border border-[#D2C8BC] bg-[#F7F3EB] px-3 py-1 text-xs font-worksans text-[#4B4B4C] hover:bg-[#E7E1D8] transition">
+              <img
+                src="./assets/icons/cogwheel.svg"
+                alt=""
+                class="w-3.5 h-3.5 pointer-events-none" />
+              <span>Edit listing</span>
+            </button>
+          </div>
         </header>
         <div
           class="flex flex-col gap-8 md:flex-row md:items-start md:gap-10 mb-10">

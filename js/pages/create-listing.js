@@ -10,6 +10,7 @@ const endsAtInput = document.querySelector("#listing-endsAt");
 const messageEl = document.querySelector("#create-message");
 const submitBtn = document.querySelector("#create-submit");
 const toastEl = document.querySelector("#create-toast");
+const mediaPreviewEl = document.querySelector("#media-preview");
 
 // force date to future
 if (endsAtInput) {
@@ -54,6 +55,40 @@ function parseMedia(str) {
     .map((line) => line.trim())
     .filter(Boolean)
     .map((url) => ({ url }));
+}
+
+// preview images
+function renderMediaPreviewFromString(str) {
+  if (!mediaPreviewEl) return;
+
+  const urls = parseMedia(str).map((m) => m.url);
+
+  mediaPreviewEl.innerHTML = "";
+
+  if (!urls.length) {
+    mediaPreviewEl.classList.add("hidden");
+    return;
+  }
+
+  mediaPreviewEl.classList.remove("hidden");
+
+  urls.forEach((url) => {
+    const wrapper = document.createElement("div");
+    wrapper.className =
+      "w-16 h-16 rounded-md overflow-hidden bg-[#D2C8BC]/40 flex items-center justify-center";
+
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = "Media preview";
+    img.className = "w-full h-full object-cover";
+
+    img.onerror = () => {
+      wrapper.textContent = "Image error";
+    };
+
+    wrapper.appendChild(img);
+    mediaPreviewEl.appendChild(wrapper);
+  });
 }
 
 // form validation
@@ -146,6 +181,12 @@ function init() {
   if (form) {
     form.addEventListener("submit", handleSubmit);
   }
+}
+
+if (mediaInput) {
+  mediaInput.addEventListener("input", () => {
+    renderMediaPreviewFromString(mediaInput.value);
+  });
 }
 
 init();

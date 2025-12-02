@@ -1,5 +1,6 @@
 // for listings.html, all listings
 import { getListings } from "../api/listings.js";
+import { getAuthUser } from "../utils/guards.js";
 
 const PAGE_SIZE = 20;
 const ENDING_WINDOW_HOURS = 24;
@@ -46,6 +47,9 @@ export function createListingCard(listing) {
 
   const { id, title, media, endsAt, seller, _count, bids } = listing;
 
+  const authUser = getAuthUser?.();
+  const loggedInName = authUser?.name?.toLowerCase();
+  const sellerNameLower = seller?.name?.toLowerCase();
   const bidsCount = _count?.bids ?? bids?.length ?? 0;
   const sellerName = seller?.name || "Unknown seller";
   const imageUrl =
@@ -95,6 +99,45 @@ export function createListingCard(listing) {
   card.addEventListener("click", () => {
     window.location.href = `listing-page.html?id=${encodeURIComponent(id)}`;
   });
+
+  // edit cogwheel button for own listings
+  const isEnded =
+    listing.endsAt && new Date(listing.endsAt).getTime() <= Date.now();
+
+  if (
+    loggedInName &&
+    sellerNameLower &&
+    loggedInName === sellerNameLower &&
+    !isEnded
+  ) {
+    const cogBtn = document.createElement("button");
+    cogBtn.type = "button";
+    cogBtn.setAttribute("aria-label", "Edit listing");
+    cogBtn.title = "Edit listing";
+    cogBtn.className =
+      "absolute top-2 right-2 z-10 inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/20 shadow transition hover:bg-[#FAF9F6]";
+
+    cogBtn.innerHTML = `
+    <img 
+      src="./assets/icons/cogwheel.svg" 
+      alt="" 
+      class="w-5 h-5 pointer-events-none opacity-70"
+    />
+  `;
+
+    // position for cogwheel inside the card
+    const imageWrapper = card.querySelector("div.relative, .relative");
+    const target = imageWrapper || card;
+
+    target.classList.add("relative");
+    target.appendChild(cogBtn);
+
+    cogBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+      window.location.href = `edit-listing.html?id=${encodeURIComponent(id)}`;
+    });
+  }
 
   return card;
 }
