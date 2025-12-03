@@ -28,5 +28,5 @@ export async function getProfile(name) {
     throw new Error(msg);
   }
 
-  return body;
+  return body?.data ?? body;
 }

@@ -202,7 +202,7 @@ function getSortParams() {
     return { sort: "created", sortOrder: "asc" };
   }
 
-  if (value === "ending" || value === "endingsoon" || value === "ending-soon") {
+  if (value === "endingSoon") {
     return { sort: "endsAt", sortOrder: "asc" };
   }
 
@@ -249,10 +249,11 @@ async function initListingsPage(page = 1) {
   try {
     const { sort, sortOrder } = getSortParams();
 
+    const sortValue = (sortOption || "").toLowerCase();
     const isEndingSoon =
-      sortOption === "ending" ||
-      sortOption === "endingsoon" ||
-      sortOption === "ending-soon";
+      sortValue === "ending" ||
+      sortValue === "endingsoon" ||
+      sortValue === "ending-soon";
 
     const filtersActive = Boolean(
       searchQuery || tagFilter || activeOnly || isEndingSoon
@@ -307,17 +308,19 @@ async function initListingsPage(page = 1) {
     if (isEndingSoon) {
       const now = Date.now();
       const windowMs = ENDING_WINDOW_HOURS * 60 * 60 * 1000;
-      const maxTime = now + windowMs;
 
-      filtered = filtered.filter((item) => {
-        const end = new Date(item.endsAt).getTime();
-        return !Number.isNaN(end) && end > now && end <= maxTime;
-      });
-      filtered.sort((a, b) => {
-        const aEnd = new Date(a.endsAt).getTime();
-        const bEnd = new Date(b.endsAt).getTime();
-        return aEnd - bEnd;
-      });
+      filtered = filtered
+        .map((item) => {
+          const end = new Date(item.endsAt).getTime();
+          return {
+            item,
+            end,
+            diff: end - now,
+          };
+        })
+        .filter((x) => !Number.isNaN(x.end) && x.diff > 0 && x.diff <= windowMs)
+        .sort((a, b) => a.end - b.end)
+        .map((x) => x.item);
     }
 
     if (!filtered.length) {

@@ -8,6 +8,7 @@ const menuButton = document.querySelector("#nav-menu-button");
 const mainMenu = document.querySelector("#nav-main-menu");
 const backdrop = document.querySelector("#nav-backdrop");
 const creditEl = document.querySelector("#nav-user-credits");
+const avatarEl = document.querySelector("#nav-avatar");
 
 // check login state
 function isLoggedIn() {
@@ -15,12 +16,14 @@ function isLoggedIn() {
   return !!auth?.accessToken;
 }
 
-// show credits under avatar
+// show credits under avatar & stock photo
 async function loadUserCredits(auth) {
-  if (!creditEl) return;
+  if (!creditEl && !avatarEl) return;
 
-  creditEl.classList.add("hidden");
-  creditEl.textContent = "";
+  if (creditEl) {
+    creditEl.classList.add("hidden");
+    creditEl.textContent = "";
+  }
 
   if (!auth?.user?.name || !auth?.accessToken) {
     return;
@@ -30,8 +33,25 @@ async function loadUserCredits(auth) {
     const profile = await getProfile(auth.user.name);
     const credits = profile?.credits ?? 0;
 
-    creditEl.textContent = `${credits} Credits`;
-    creditEl.classList.remove("hidden");
+    // update credits
+    if (creditEl) {
+      creditEl.textContent = `${credits} Credits`;
+      creditEl.classList.remove("hidden");
+    }
+
+    // update avatar
+    if (avatarEl) {
+      const avatarUrl =
+        typeof profile.avatar === "string"
+          ? profile.avatar
+          : profile.avatar?.url ||
+            "./assets/images/profile-avatar-placeholder.svg";
+
+      avatarEl.src = avatarUrl;
+      avatarEl.onerror = () => {
+        avatarEl.src = "./assets/images/profile-avatar-placeholder.svg";
+      };
+    }
   } catch (error) {
     console.error("Failed to load user credits", error);
   }
