@@ -7,6 +7,8 @@ const ENDING_WINDOW_HOURS = 24;
 
 const grid = document.querySelector("#listings-grid");
 const template = document.querySelector("#listing-card-template");
+const loadingEl = document.querySelector("#listings-loading");
+const contentEl = document.querySelector("#listings-content");
 
 // pagination elements
 const prevBtn = document.querySelector("#pagination-prev");
@@ -19,9 +21,19 @@ const tagsInput = document.querySelector("#filter-tags");
 const activeToggle = document.querySelector("#filter-active");
 const sortSelect = document.querySelector("#sort-select");
 const clearBtn = document.querySelector("#filter-clear");
+const params = new URLSearchParams(window.location.search);
+const initialSeller = (params.get("seller") || "").toLowerCase();
+const headingEl = document.querySelector("#listings-heading");
+
+if (headingEl && initialSeller) {
+  const displayName =
+    initialSeller.charAt(0).toUpperCase() + initialSeller.slice(1);
+  headingEl.textContent = `Listings by ${displayName}`;
+}
 
 let currentPage = 1;
 let pageCount = 1;
+let sellerFilter = initialSeller;
 
 // filter states
 let searchQuery = "";
@@ -30,6 +42,31 @@ let activeOnly = false;
 let sortOption = "newest";
 let allListingsCache = null;
 const MAX_FILTER_ITEMS = 600;
+
+// loading spinner
+function setLoading(isLoading) {
+  if (!loadingEl || !contentEl) return;
+
+  loadingEl.classList.toggle("hidden", !isLoading);
+
+  if (isLoading) {
+    contentEl.classList.add("opacity-0");
+    contentEl.classList.remove("opacity-100");
+  } else {
+    contentEl.classList.remove("opacity-0");
+    contentEl.classList.add("opacity-100");
+  }
+}
+
+function showLoadingForMinimum(startTime, minimumMs = 700) {
+  const elapsed = performance.now() - startTime;
+  const remaining = minimumMs - elapsed;
+
+  if (remaining > 0) {
+    return new Promise((resolve) => setTimeout(resolve, remaining));
+  }
+  return Promise.resolve();
+}
 
 // card
 export function createListingCard(listing) {
@@ -83,7 +120,7 @@ export function createListingCard(listing) {
   if (sellerNameEl) sellerNameEl.textContent = sellerName;
 
   if (sellerLinkEl) {
-    sellerLinkEl.href = `profile.html?name=${encodeURIComponent(sellerName)}`;
+    sellerLinkEl.href = `listings.html?seller=${encodeURIComponent(sellerName)}`;
     sellerLinkEl.textContent = sellerName;
   }
 
@@ -244,6 +281,9 @@ async function loadAllListings(sort, sortOrder) {
 // get list
 async function initListingsPage(page = 1) {
   if (!grid || !template) return;
+
+  const start = performance.now();
+  setLoading(true);
   grid.innerHTML = "";
 
   try {
@@ -256,7 +296,7 @@ async function initListingsPage(page = 1) {
       sortValue === "ending-soon";
 
     const filtersActive = Boolean(
-      searchQuery || tagFilter || activeOnly || isEndingSoon
+      searchQuery || tagFilter || activeOnly || isEndingSoon || sellerFilter
     );
 
     let data = [];
@@ -323,6 +363,13 @@ async function initListingsPage(page = 1) {
         .map((x) => x.item);
     }
 
+    if (sellerFilter) {
+      filtered = filtered.filter((item) => {
+        const name = item.seller?.name?.toLowerCase() || "";
+        return name === sellerFilter;
+      });
+    }
+
     if (!filtered.length) {
       grid.textContent = "No listings found.";
       updatePagination(meta);
@@ -338,6 +385,9 @@ async function initListingsPage(page = 1) {
   } catch (error) {
     console.error(error);
     grid.textContent = "Could not load listings.";
+  } finally {
+    await showLoadingForMinimum(start, 500);
+    setLoading(false);
   }
 }
 
@@ -371,7 +421,7 @@ if (activeToggle) {
       track.classList.toggle("bg-[#1B1B1C]/20", activeOnly);
 
       knob.classList.toggle("translate-x-0", !activeOnly);
-      knob.classList.toggle("translate-x-4", activeOnly);
+      knob.classList.toggle("translate-x-3.5", activeOnly);
     }
 
     allListingsCache = null;
@@ -410,11 +460,25 @@ if (clearBtn) {
     tagFilter = "";
     activeOnly = false;
     sortOption = "newest";
+    sellerFilter = "";
     allListingsCache = null;
 
+    // reset heading
+    if (headingEl) {
+      headingEl.textContent = "Listings";
+    }
+
+    // remove seller from url
+    const url = new URL(window.location.href);
+    url.searchParams.delete("seller");
+    window.history.replaceState({}, "", url.toString());
+
+    // reset inputs
     if (searchInput) searchInput.value = "";
     if (tagsInput) tagsInput.value = "";
     if (sortSelect) sortSelect.value = "newest";
+
+    // reset toggle UI
     if (activeToggle) {
       activeToggle.setAttribute("aria-pressed", "false");
       const track = activeToggle.querySelector("[data-track]");

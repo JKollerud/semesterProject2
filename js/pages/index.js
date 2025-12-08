@@ -5,9 +5,17 @@ const CARDS_PER_SLIDE = 3;
 
 const track = document.getElementById("trending-track");
 const dotsWrap = document.getElementById("trending-dots");
+const loaderEl = document.getElementById("home-loading");
+const contentEl = document.getElementById("home-listings-content");
 
 let currentSlide = 0;
 let totalSlides = 0;
+
+function showContent() {
+  if (!loaderEl || !contentEl) return;
+  loaderEl.classList.add("hidden");
+  contentEl.classList.remove("opacity-0");
+}
 
 function updateSlide() {
   track.style.transform = `translateX(-${currentSlide * 100}%)`;
@@ -53,6 +61,8 @@ function buildCarousel(listings) {
   updateSlide();
 }
 async function loadTrending() {
+  const MIN_DURATION = 700;
+  const startTime = performance.now();
   try {
     const { data = [] } = await getListings({
       limit: 9,
@@ -61,9 +71,27 @@ async function loadTrending() {
       sortOrder: "desc",
     });
 
-    buildCarousel(data);
+    if (!data.length) {
+      track.innerHTML =
+        '<p class="text-center text-sm opacity-70 py-10">No auctions found.</p>';
+      dotsWrap.innerHTML = "";
+    } else {
+      buildCarousel(data);
+    }
   } catch (err) {
     console.error(err);
+    track.innerHTML =
+      '<p class="text-center text-sm opacity-70 py-10">Failed to load auctions.</p>';
+    dotsWrap.innerHTML = "";
+  } finally {
+    const elapsed = performance.now() - startTime;
+    const remaining = MIN_DURATION - elapsed;
+
+    if (remaining > 0) {
+      setTimeout(showContent, remaining);
+    } else {
+      showContent();
+    }
   }
 }
 

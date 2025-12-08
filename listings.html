@@ -12,7 +12,9 @@
       rel="stylesheet" />
   </head>
   <body class="min-h-screen bg-[#FAF9F6] flex flex-col">
-    <header class="w-full bg-[#E7E1D8] border-b border-[#D2C8BC]">
+    <header
+      id="main-header"
+      class="opacity-0 transition-opacity duration-700 w-full bg-[#E7E1D8] border-b border-[#D2C8BC]">
       <div
         class="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between gap-4">
         <div class="relative shrink-0">
@@ -191,10 +193,14 @@
           </div>
         </div>
       </section>
-      <section class="max-w-5xl mx-auto px-4 py-10">
+      <section class="max-w-5xl mx-auto px-4 py-10 min-h-[480px]">
         <div
           class="mt-5 mb-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h1 class="font-playfair text-3xl text-[#1B1B1C]">Listings</h1>
+          <h1
+            id="listings-heading"
+            class="font-playfair text-3xl text-[#1B1B1C]">
+            Listings
+          </h1>
           <div
             class="flex items-center gap-2 text-xs sm:text-sm font-worksans text-[#4B4B4C]">
             <span>Sort by</span>
@@ -208,81 +214,91 @@
           </div>
         </div>
         <div
-          class="grid gap-6 grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
-          id="listings-grid">
-          <template id="listing-card-template">
-            <article
-              class="group overflow-hidden rounded-2xl bg-[#FAF9F6] border border-[#E0D6C8] shadow-sm hover:-translate-y-1 transition cursor-pointer">
-              <div
-                class="relative h-48 bg-[#4F6E60] flex items-center justify-center">
-                <img
-                  data-image
-                  src="./assets/icons/placeholder-listing.svg"
-                  alt="Auction item image"
-                  class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition" />
-                <div
-                  class="absolute top-3 left-3 rounded-full bg-[#F7F3EB]/90 px-3 py-1 text-xs font-worksans text-[#1B1B1C]"
-                  data-bids>
-                  0 bids
-                </div>
-                <div
-                  class="absolute bottom-3 left-3 rounded-full bg-[#FDECEC]/95 px-3 py-1 text-xs font-worksans text-[#893B2F]"
-                  data-time-remaining>
-                  In about 15 hours
-                </div>
-              </div>
-              <div class="p-5 space-y-4">
-                <h2 class="font-playfair text-xl text-[#1B1B1C]" data-title>
-                  Auction item
-                </h2>
-                <dl class="space-y-2 text-xs font-worksans text-[#4B4B4C]">
-                  <div class="flex justify-between gap-4">
-                    <dt class="text-[#9B9287]">By:</dt>
-                    <dd class="text-right">
-                      <a
-                        class="text-[#4F6E8F] hover:text-[#1B1B1C] underline"
-                        data-seller-link>
-                        <span data-seller-name>Seller Username</span>
-                      </a>
-                    </dd>
-                  </div>
-                  <div class="flex justify-between gap-4">
-                    <dt class="text-[#9B9287]">Ends:</dt>
-                    <dd class="text-right text-[#893B2F]" data-ends-at>
-                      December 10, 2025
-                    </dd>
-                  </div>
-                  <div class="flex justify-between gap-4">
-                    <dt class="text-[#9B9287]">Current bid:</dt>
-                    <dd class="text-right text-[#1B1B1C]">
-                      <span class="font-semibold" data-current-bid>100</span>
-                      Credits
-                    </dd>
-                  </div>
-                </dl>
-              </div>
-            </article>
-          </template>
+          id="listings-loading"
+          class="flex justify-center items-center py-24">
+          <div
+            class="w-10 h-10 border-4 border-[#D2C8BC] border-t-[#4F6E60] rounded-full animate-spin"></div>
         </div>
-        <nav
-          id="listings-pagination"
-          class="mt-8 flex items-center justify-center gap-4 font-worksans">
-          <button
-            id="pagination-prev"
-            type="button"
-            class="px-3 py-1 rounded-full border border-[#D2C8BC] bg-[#F7F3EB] text-xs text-[#4B4B4C] disabled:opacity-40">
-            Previous
-          </button>
-          <span id="pagination-info" class="text-xs sm:text-sm">
-            Page 1 of 1
-          </span>
-          <button
-            id="pagination-next"
-            type="button"
-            class="px-3 py-1 rounded-full border border-[#D2C8BC] bg-[#F7F3EB] text-xs text-[#4B4B4C] disabled:opacity-40">
-            Next
-          </button>
-        </nav>
+        <div
+          id="listings-content"
+          class="opacity-0 transition-opacity duration-700">
+          <div
+            class="grid gap-6 grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+            id="listings-grid">
+            <template id="listing-card-template">
+              <article
+                class="group overflow-hidden rounded-2xl bg-[#FAF9F6] border border-[#E0D6C8] shadow-sm hover:-translate-y-1 transition cursor-pointer">
+                <div
+                  class="relative h-48 bg-[#4F6E60] flex items-center justify-center">
+                  <img
+                    data-image
+                    src="./assets/icons/placeholder-listing.svg"
+                    alt="Auction item image"
+                    class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition" />
+                  <div
+                    class="absolute top-3 left-3 rounded-full bg-[#F7F3EB]/90 px-3 py-1 text-xs font-worksans text-[#1B1B1C]"
+                    data-bids>
+                    0 bids
+                  </div>
+                  <div
+                    class="absolute bottom-3 left-3 rounded-full bg-[#FDECEC]/95 px-3 py-1 text-xs font-worksans text-[#893B2F]"
+                    data-time-remaining>
+                    In about 15 hours
+                  </div>
+                </div>
+                <div class="p-5 space-y-4">
+                  <h2 class="font-playfair text-xl text-[#1B1B1C]" data-title>
+                    Auction item
+                  </h2>
+                  <dl class="space-y-2 text-xs font-worksans text-[#4B4B4C]">
+                    <div class="flex justify-between gap-4">
+                      <dt class="text-[#9B9287]">By:</dt>
+                      <dd class="text-right">
+                        <a
+                          class="text-[#4F6E8F] hover:text-[#1B1B1C] underline"
+                          data-seller-link>
+                          <span data-seller-name>Seller Username</span>
+                        </a>
+                      </dd>
+                    </div>
+                    <div class="flex justify-between gap-4">
+                      <dt class="text-[#9B9287]">Ends:</dt>
+                      <dd class="text-right text-[#893B2F]" data-ends-at>
+                        December 10, 2025
+                      </dd>
+                    </div>
+                    <div class="flex justify-between gap-4">
+                      <dt class="text-[#9B9287]">Current bid:</dt>
+                      <dd class="text-right text-[#1B1B1C]">
+                        <span class="font-semibold" data-current-bid>100</span>
+                        Credits
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              </article>
+            </template>
+          </div>
+          <nav
+            id="listings-pagination"
+            class="mt-8 flex items-center justify-center gap-4 font-worksans">
+            <button
+              id="pagination-prev"
+              type="button"
+              class="px-3 py-1 rounded-full border border-[#D2C8BC] bg-[#F7F3EB] text-xs text-[#4B4B4C] disabled:opacity-40">
+              Previous
+            </button>
+            <span id="pagination-info" class="text-xs sm:text-sm">
+              Page 1 of 1
+            </span>
+            <button
+              id="pagination-next"
+              type="button"
+              class="px-3 py-1 rounded-full border border-[#D2C8BC] bg-[#F7F3EB] text-xs text-[#4B4B4C] disabled:opacity-40">
+              Next
+            </button>
+          </nav>
+        </div>
       </section>
     </main>
     <footer class="bg-[#1B1B1C] text-[#FAF9F6] py-16 px-10">

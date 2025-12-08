@@ -12,7 +12,9 @@
       rel="stylesheet" />
   </head>
   <body class="min-h-screen bg-[#FAF9F6] flex flex-col">
-    <header class="w-full bg-[#E7E1D8] border-b border-[#D2C8BC]">
+    <header
+      id="main-header"
+      class="opacity-0 transition-opacity duration-700 w-full bg-[#E7E1D8] border-b border-[#D2C8BC]">
       <div
         class="max-w-5xl mx-auto px-4 py-6 flex items-center justify-between gap-4">
         <div class="relative shrink-0">
@@ -110,7 +112,7 @@
           </button>
           <div
             id="nav-user-menu"
-            class="hidden absolute right-0 mt-10 w-40 bg-[#F7F3EB] border border-[#D2C8BC] rounded-xl shadow-lg py-2 z-20">
+            class="hidden absolute right-0 mt-10 w-40 bg-[#E7E1D8] border border-[#D2C8BC] rounded-xl shadow-lg py-2 z-20">
             <a
               href="profile.html"
               class="block px-4 text-sm font-worksans text-[#1B1B1C] hover:bg-[#E7E1D8]">
@@ -137,8 +139,9 @@
           class="w-full h-[320px] md:h-[420px] object-cover opacity-80" />
 
         <div
-          class="absolute inset-0 bg-gradient-to-r from-black/40 to-black/10 flex items-center">
-          <div class="max-w-5xl px-6 text-white space-y-4">
+          class="absolute inset-0 bg-gradient-to-r from-black/40 to-black/10">
+          <div
+            class="max-w-5xl mx-auto px-4 h-full flex flex-col justify-center items-start text-[#FAF9F6] space-y-4">
             <h1 class="font-playfair text-3xl md:text-5xl">
               Nordholm Auction House
             </h1>
@@ -146,32 +149,40 @@
               At Nordholm, we bring together timeless artworks and discerning
               collectors in a setting defined by calm, Nordic elegance.
             </p>
-
             <a
               href="listings.html"
-              class="inline-block mt-3 bg-[#4F6E60] hover:bg-[#3E574C] text-[#F8F5EE] px-5 py-2 rounded-full font-worksans text-sm transition">
+              class="inline-block w-auto mt-3 bg-[#4F6E60] hover:bg-[#3E574C] text-[#FAF9F6] px-5 py-2 rounded-full font-worksans text-sm transition">
               Browse Items
             </a>
           </div>
         </div>
       </section>
-      <section class="max-w-5xl mx-auto px-4 py-14">
+      <section
+        class="max-w-5xl mx-auto px-4 py-14 min-h-[450px] md:min-h-[550px] lg:min-h-[650px]">
         <header class="mb-8 border-b border-[#E0D6C8] pb-4">
           <h2 class="font-playfair text-2xl md:text-3xl text-[#1B1B1C]">
             Newest auctions
           </h2>
         </header>
-        <div class="overflow-hidden">
+        <div id="home-loading" class="flex justify-center items-center py-24">
           <div
-            id="trending-track"
-            class="flex transition-transform duration-300 ease-out"></div>
+            class="w-10 h-10 border-4 border-[#D2C8BC] border-t-[#4F6E60] rounded-full animate-spin"></div>
         </div>
         <div
-          id="trending-dots"
-          class="flex items-center justify-center gap-2 mt-6"></div>
-        <div
-          id="trending-grid"
-          class="grid gap-6 grid-cols-2 md:grid-cols-3"></div>
+          id="home-listings-content"
+          class="opacity-0 transition-opacity duration-700">
+          <div class="overflow-hidden">
+            <div
+              id="trending-track"
+              class="flex transition-transform duration-300 ease-out"></div>
+          </div>
+          <div
+            id="trending-dots"
+            class="flex items-center justify-center gap-2 mt-6"></div>
+          <div
+            id="trending-grid"
+            class="grid gap-6 grid-cols-2 md:grid-cols-3"></div>
+        </div>
         <template id="listing-card-template">
           <article
             class="group overflow-hidden rounded-2xl bg-[#FAF9F6] border border-[#E0D6C8] shadow-sm hover:-translate-y-1 transition cursor-pointer">

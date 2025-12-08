@@ -159,3 +159,10 @@ document.querySelectorAll("[data-logout]").forEach((btn) => {
 });
 
 updateNavUser();
+
+window.addEventListener("load", () => {
+  const header = document.querySelector("header");
+  if (header) {
+    header.classList.remove("opacity-0");
+  }
+});
