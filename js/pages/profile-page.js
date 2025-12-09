@@ -44,6 +44,34 @@ const DEFAULT_AVATAR = "./assets/images/profile-avatar-placeholder.svg";
 
 let currentTab = "listings";
 
+// image fade for banner & avatar
+function setImageWithFade(
+  img,
+  url,
+  fallback,
+  finalOpacityClass = "opacity-100"
+) {
+  if (!img) return;
+
+  img.classList.remove("opacity-80", "opacity-100");
+  img.classList.add("opacity-0");
+
+  const handleLoad = () => {
+    img.classList.remove("opacity-0");
+    img.classList.add(finalOpacityClass);
+    img.removeEventListener("load", handleLoad);
+  };
+
+  img.addEventListener("load", handleLoad);
+
+  img.onerror = () => {
+    if (img.src === fallback) return;
+    img.src = fallback;
+  };
+
+  img.src = url;
+}
+
 // init load profile
 async function initProfilePage() {
   if (!loadingEl) return;
@@ -84,6 +112,10 @@ async function loadProfileInfo() {
       : profile.avatar?.url || DEFAULT_AVATAR;
 
   if (profileAvatar) {
+    setImageWithFade(profileAvatar, avatarUrl, DEFAULT_AVATAR, "opacity-100");
+  }
+
+  if (profileAvatar) {
     profileAvatar.src = avatarUrl;
     profileAvatar.onerror = () => {
       profileAvatar.src = DEFAULT_AVATAR;
@@ -102,6 +134,10 @@ async function loadProfileInfo() {
     typeof profile.banner === "string"
       ? profile.banner
       : profile.banner?.url || DEFAULT_BANNER;
+
+  if (profileBanner) {
+    setImageWithFade(profileBanner, bannerUrl, DEFAULT_BANNER, "opacity-80");
+  }
 
   if (profileBanner) {
     profileBanner.src = bannerUrl;

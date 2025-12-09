@@ -28,7 +28,7 @@ const headingEl = document.querySelector("#listings-heading");
 if (headingEl && initialSeller) {
   const displayName =
     initialSeller.charAt(0).toUpperCase() + initialSeller.slice(1);
-  headingEl.textContent = `Listings by ${displayName}`;
+  headingEl.textContent = `Listings by "${displayName}"`;
 }
 
 let currentPage = 1;

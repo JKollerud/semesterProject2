@@ -158,15 +158,56 @@
           class="flex flex-col gap-8 md:flex-row md:items-start md:gap-10 mb-10">
           <div class="w-full md:w-1/2">
             <div
-              class="aspect-[4/3] w-full overflow-hidden rounded-2xl bg-[#4F6E60]">
+              class="aspect-[4/3] w-full overflow-hidden rounded-2xl bg-[#E7E1D8] relative">
+              <div
+                id="image-spinner"
+                class="absolute inset-0 flex items-center justify-center">
+                <div
+                  class="h-6 w-6 border-2 border-[#9B9287]/30 border-t-[#1B1B1C] rounded-full animate-spin"></div>
+              </div>
               <img
                 id="listing-image"
                 src="./assets/icons/placeholder-listing.svg"
                 alt="Listing image"
-                class="h-full w-full object-cover" />
+                class="h-full w-full object-cover opacity-0 transition-opacity duration-500" />
+              <button
+                id="listing-image-prev"
+                type="button"
+                class="hidden absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-[#1B1B1C]/70 text-[#FAF9F6] flex items-center justify-center shadow-sm hover:bg-black/90 transition">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  class="w-5 h-5">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                id="listing-image-next"
+                type="button"
+                class="hidden absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-[#1B1B1C]/70 text-[#FAF9F6] flex items-center justify-center shadow-sm hover:bg-black/90 transition">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  class="w-5 h-5">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
             </div>
+
             <div
-              class="mt-3 flex justify-center gap-2"
+              class="mt-3 flex justify-center gap-3"
               id="listing-image-dots"></div>
           </div>
           <div class="w-full md:w-1/2 space-y-6">

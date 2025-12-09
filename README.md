@@ -66,7 +66,7 @@ const API_KEY = 'ENTER_YOUR_API_KEY';
 npm run dev
 ```
 
-6. Build minifield CSS for production
+6. Build minified CSS for production
 
 ```bash
 npm run build

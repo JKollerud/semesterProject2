@@ -23,6 +23,9 @@ const bidHistoryEmptyEl = document.querySelector("#bid-history-empty");
 const bidHistoryTableEl = document.querySelector("#bid-history-table");
 const bidHistoryBodyEl = document.querySelector("#bid-history-body");
 const editBtn = document.querySelector("#listing-edit");
+const prevArrow = document.querySelector("#listing-image-prev");
+const nextArrow = document.querySelector("#listing-image-next");
+const imageSpinner = document.querySelector("#image-spinner");
 
 // bid form
 const bidForm = document.querySelector("#bid-form");
@@ -199,21 +202,43 @@ function renderListing(listing) {
   }
 
   let currentIndex = 0;
+  const hasMultipleImages = images.length > 1;
+
+  // show / hide arrows
+  if (prevArrow && nextArrow) {
+    prevArrow.classList.toggle("hidden", !hasMultipleImages);
+    nextArrow.classList.toggle("hidden", !hasMultipleImages);
+  }
 
   function showImage(index) {
     const image = images[index];
     if (!image || !imgEl) return;
 
-    imgEl.src = image.url;
-    imgEl.alt = image.alt || title || "Listing image";
+    // reset and show spinner
+    if (imageSpinner) {
+      imageSpinner.classList.remove("hidden");
+    }
+    imgEl.style.opacity = "0";
+
+    imgEl.onload = () => {
+      imgEl.style.opacity = "1";
+      if (imageSpinner) {
+        imageSpinner.classList.add("hidden");
+      }
+    };
+
     imgEl.onerror = () => {
       imgEl.src = placeholder;
+      if (imageSpinner) imageSpinner.classList.add("hidden");
     };
+
+    imgEl.src = image.url;
+    imgEl.alt = image.alt || title || "Listing image";
 
     // update dots
     if (imageDotsEl) {
       [...imageDotsEl.children].forEach((dot, i) => {
-        dot.classList.toggle("bg-[#1B1B1C]/40", i === index);
+        dot.classList.toggle("bg-[#1B1B1C]/90", i === index);
         dot.classList.toggle("bg-[#1B1B1C]/10", i !== index);
       });
     }
@@ -227,7 +252,7 @@ function renderListing(listing) {
       images.forEach((_, index) => {
         const dot = document.createElement("button");
         dot.type = "button";
-        dot.className = "h-1.5 w-1.5 rounded-full bg-[#1B1B1C]/10 transition";
+        dot.className = "h-3 w-3 rounded-full bg-[#1B1B1C]/10 transition";
         dot.setAttribute("aria-label", `Show image ${index + 1}`);
 
         dot.addEventListener("click", () => {
@@ -240,11 +265,27 @@ function renderListing(listing) {
     }
   }
 
+  if (hasMultipleImages) {
+    if (prevArrow) {
+      prevArrow.onclick = () => {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        showImage(currentIndex);
+      };
+    }
+
+    if (nextArrow) {
+      nextArrow.onclick = () => {
+        currentIndex = (currentIndex + 1) % images.length;
+        showImage(currentIndex);
+      };
+    }
+  }
+
   showImage(0);
 
   // seller
   sellerEl.textContent = sellerName;
-  sellerEl.href = `profile.html?name=${encodeURIComponent(sellerName)}`;
+  sellerEl.href = `listings.html?seller=${encodeURIComponent(sellerName)}`;
 
   // stats
   const totalBids = bids.length;

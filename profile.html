@@ -140,7 +140,7 @@
             <img
               id="profile-banner"
               alt="Profile banner"
-              class="h-full w-full object-cover opacity-80" />
+              class="h-full w-full object-cover opacity-0 transition-opacity duration-500" />
             <button
               id="profile-edit-btn"
               type="button"
@@ -155,7 +155,7 @@
               <img
                 id="profile-avatar"
                 alt="Profile avatar"
-                class="h-full w-full object-cover" />
+                class="h-full w-full object-cover opacity-0 transition-opacity duration-500" />
             </div>
             <div class="flex-1 min-w-[10rem]">
               <h1
@@ -325,17 +325,17 @@
           <p
             id="profile-edit-message"
             class="text-xs font-worksans text-[#893B2F] hidden"></p>
-          <div class="mt-4 flex flex-col sm:flex-row gap-3">
+          <div class="mt-4 flex flex-col gap-3">
             <button
               type="button"
               id="profile-edit-cancel"
-              class="flex-1 h-9 rounded-md border border-[#D2C8BC] bg-[#F7F3EB] text-xs font-worksans text-[#4B4B4C] hover:bg-[#E7E1D8] transition">
+              class="flex-1 px-4 py-2 rounded-md border border-[#D2C8BC] bg-[#F7F3EB] text-xs font-worksans text-[#4B4B4C] hover:bg-[#E7E1D8] transition">
               Cancel
             </button>
             <button
               type="submit"
               id="profile-edit-save"
-              class="flex-1 h-9 rounded-md bg-[#4F6E8F] text-xs font-worksans text-[#FAF9F6] hover:bg-[#3E5572] transition disabled:opacity-40">
+              class="flex-1 px-4 py-2 rounded-md bg-[#4F6E8F] text-xs font-worksans text-[#FAF9F6] hover:bg-[#3E5572] transition disabled:opacity-40">
               Save changes
             </button>
           </div>
