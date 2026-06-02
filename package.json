@@ -20,6 +20,7 @@
   "homepage": "https://github.com/JKollerud/semesterProject2#readme",
   "devDependencies": {
     "autoprefixer": "^10.4.22",
+    "baseline-browser-mapping": "^2.10.33",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.7.1",

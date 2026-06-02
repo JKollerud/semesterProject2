@@ -5,6 +5,7 @@ const userButton = document.querySelector("#nav-user-button");
 const userMenu = document.querySelector("#nav-user-menu");
 const usernameEl = document.querySelector("#nav-username");
 const menuButton = document.querySelector("#nav-menu-button");
+const menuCloseButton = document.querySelector("#nav-menu-close");
 const mainMenu = document.querySelector("#nav-main-menu");
 const backdrop = document.querySelector("#nav-backdrop");
 const creditEl = document.querySelector("#nav-user-credits");
@@ -136,6 +137,14 @@ if (menuButton) {
   menuButton.addEventListener("click", (event) => {
     event.stopPropagation();
     toggleMainMenu();
+  });
+}
+
+// hamburger close button (×)
+if (menuCloseButton) {
+  menuCloseButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    closeAllMenus();
   });
 }
 
