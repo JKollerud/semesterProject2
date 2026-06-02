@@ -54,7 +54,7 @@ git clone "https://github.com/JKollerud/semesterProject2.git"
 npm install
 ```
 
-4. Enter your API in config.js
+4. Enter your API in `js/api/config.js`
 
 ```bash
 const API_KEY = 'ENTER_YOUR_API_KEY';
@@ -87,25 +87,28 @@ semesterProject2/
 ├── assets/
 │   ├── icons/
 │   └── images/
+├── css/
+│   └── main.css
 ├── js/
-│   ├── profile-page.js
-│   ├── listing-page.js
-│   ├── create-listing-page.js
-│   ├── register.js
-│   ├── login.js
-│   ├── listings.js
-│   ├── index.js
-│   ├── edit-listing.js
 │   ├── api/
 │   │   ├── auth.js
 │   │   ├── config.js
 │   │   ├── listings.js
 │   │   └── profiles.js
+│   ├── pages/
+│   │   ├── create-listing.js
+│   │   ├── edit-listing.js
+│   │   ├── index.js
+│   │   ├── listing-page.js
+│   │   ├── listings.js
+│   │   ├── login.js
+│   │   ├── profile-page.js
+│   │   └── register.js
 │   └── utils/
-│       ├── nav.js
-│       ├── storage.js
+│       ├── date.js
 │       ├── guards.js
-│       └── date.js
+│       ├── nav.js
+│       └── storage.js
 └── README.md
 ```
 
