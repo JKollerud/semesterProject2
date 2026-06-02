@@ -52,6 +52,7 @@
               </a>
               <a
                 href="create-listing.html"
+                data-auth-visible="logged-in"
                 class="block font-playfair text-2xl text-[#1B1B1C] hover:opacity-80">
                 Sell
               </a>
@@ -89,7 +90,12 @@
             class="hidden md:flex items-center gap-6 mt-2 text-sm font-worksans text-[#4B4B4C]">
             <a href="index.html" class="hover:text-[#1B1B1C]">Home</a>
             <a href="listings.html" class="hover:text-[#1B1B1C]">Auctions</a>
-            <a href="create-listing.html" class="hover:text-[#1B1B1C]">Sell</a>
+            <a
+              href="create-listing.html"
+              data-auth-visible="logged-in"
+              class="hover:text-[#1B1B1C] hidden">
+              Sell
+            </a>
           </nav>
         </div>
         <div class="relative shrink-0">
@@ -312,6 +318,7 @@
         © 2025 – Nordholm Auctions
       </div>
     </footer>
+    <!-- Delete confirmation modal -->
     <div
       id="delete-modal"
       class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
