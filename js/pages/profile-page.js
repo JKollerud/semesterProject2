@@ -1,6 +1,5 @@
 import { requireAuth, getAuthUser, getAuthToken } from "../utils/guards.js";
 import { getProfile } from "../api/profiles.js";
-import { getListings } from "../api/listings.js";
 import { API_BASE, API_KEY } from "../api/config.js";
 
 // auth
@@ -314,14 +313,41 @@ function updateEmptyState() {
   }
 }
 
+// shared fetch helper for profile sub-endpoints
+async function fetchProfileEndpoint(endpoint) {
+  const url = new URL(
+    `${API_BASE}/auction/profiles/${encodeURIComponent(username)}/${endpoint}`
+  );
+  url.searchParams.set("_listings", "true");
+  url.searchParams.set("_bids", "true");
+  url.searchParams.set("_seller", "true");
+  url.searchParams.set("limit", "100");
+
+  const res = await fetch(url.href, {
+    headers: {
+      "Content-Type": "application/json",
+      "X-Noroff-API-Key": API_KEY,
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  const body = await res.json();
+
+  if (!res.ok) {
+    const msg = body?.errors?.[0]?.message || `Failed to fetch ${endpoint}`;
+    throw new Error(msg);
+  }
+
+  return body?.data ?? body ?? [];
+}
+
 // my listings / bids / wins
 async function loadMyListings() {
   if (!listingsGrid) return;
 
-  const { data = [] } = await getListings({ limit: 100 });
-  const mine = data.filter((item) => item.seller?.name === username);
+  const data = await fetchProfileEndpoint("listings");
 
-  renderListings(listingsGrid, mine);
+  renderListings(listingsGrid, Array.isArray(data) ? data : []);
   if (currentTab === "listings") {
     updateEmptyState();
   }
@@ -330,25 +356,21 @@ async function loadMyListings() {
 async function loadMyBids() {
   if (!bidsGrid) return;
 
-  const { data = [] } = await getListings({ limit: 100 });
+  // /profiles/{name}/bids returns bid objects with a nested `listing`
+  const data = await fetchProfileEndpoint("bids");
+  const listings = Array.isArray(data)
+    ? data.map((bid) => bid.listing).filter(Boolean)
+    : [];
 
-  const myNameLower = username.toLowerCase();
+  // deduplicate by listing id (user may have bid multiple times on same listing)
+  const seen = new Set();
+  const unique = listings.filter((l) => {
+    if (seen.has(l.id)) return false;
+    seen.add(l.id);
+    return true;
+  });
 
-  const withMyBids = data.filter((listing) =>
-    (listing.bids || []).some((bid) => {
-      const bidderName =
-        (typeof bid.bidderName === "string" && bid.bidderName) ||
-        (bid.bidder &&
-          typeof bid.bidder.name === "string" &&
-          bid.bidder.name) ||
-        "";
-
-      return bidderName.toLowerCase() === myNameLower;
-    })
-  );
-
-  renderListings(bidsGrid, withMyBids);
-
+  renderListings(bidsGrid, unique);
   if (currentTab === "bids") {
     updateEmptyState();
   }
@@ -357,23 +379,9 @@ async function loadMyBids() {
 async function loadMyWins() {
   if (!winsGrid) return;
 
-  const { data = [] } = await getListings({ limit: 100 });
-  const now = Date.now();
+  const data = await fetchProfileEndpoint("wins");
 
-  const wins = data.filter((listing) => {
-    const endTime = new Date(listing.endsAt).getTime();
-    if (endTime > now) return false;
-
-    const highestBid = listing.bids?.at(-1);
-    if (!highestBid) return false;
-
-    const bidderName = highestBid.bidderName || highestBid.bidder?.name || "";
-
-    return bidderName.toLowerCase() === username.toLowerCase();
-  });
-
-  renderListings(winsGrid, wins);
-
+  renderListings(winsGrid, Array.isArray(data) ? data : []);
   if (currentTab === "wins") {
     updateEmptyState();
   }
