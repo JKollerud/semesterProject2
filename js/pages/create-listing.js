@@ -71,6 +71,7 @@ function renderMediaPreviewFromString(str) {
   }
 
   mediaPreviewEl.classList.remove("hidden");
+  mediaPreviewEl.classList.add("flex");
 
   urls.forEach((url) => {
     const wrapper = document.createElement("div");

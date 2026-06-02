@@ -207,7 +207,9 @@ function renderListing(listing) {
   // show / hide arrows
   if (prevArrow && nextArrow) {
     prevArrow.classList.toggle("hidden", !hasMultipleImages);
+    prevArrow.classList.toggle("flex", hasMultipleImages);
     nextArrow.classList.toggle("hidden", !hasMultipleImages);
+    nextArrow.classList.toggle("flex", hasMultipleImages);
   }
 
   function showImage(index) {

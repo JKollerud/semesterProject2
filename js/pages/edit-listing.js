@@ -81,6 +81,7 @@ function renderMediaPreviewFromString(str) {
   }
 
   mediaPreviewEl.classList.remove("hidden");
+  mediaPreviewEl.classList.add("flex");
 
   urls.forEach((url) => {
     const wrapper = document.createElement("div");
@@ -216,11 +217,13 @@ async function handleSubmit(event) {
 async function handleDelete() {
   if (!listingId || !deleteModal) return;
   deleteModal.classList.remove("hidden");
+  deleteModal.classList.add("flex");
 }
 
 function closeDeleteModal() {
   if (!deleteModal) return;
   deleteModal.classList.add("hidden");
+  deleteModal.classList.remove("flex");
 }
 
 async function confirmDelete() {

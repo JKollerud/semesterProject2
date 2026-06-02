@@ -304,6 +304,7 @@ function updateEmptyState() {
   const hasItems = grid && grid.children.length > 0;
 
   emptyEl.classList.toggle("hidden", hasItems);
+  emptyEl.classList.toggle("flex", !hasItems);
 
   if (!hasItems) {
     let msg = "No listings found.";
@@ -400,6 +401,7 @@ function setActiveTab(tabName) {
   Object.entries(tabMap).forEach(([name, grid]) => {
     if (!grid) return;
     grid.classList.toggle("hidden", name !== tabName);
+    grid.classList.toggle("grid", name === tabName);
   });
 
   tabButtons.forEach((btn) => {
@@ -434,12 +436,14 @@ if (editBtn && editModal) {
     editMsg?.classList.add("hidden");
     editMsg && (editMsg.textContent = "");
     editModal.classList.remove("hidden");
+    editModal.classList.add("flex");
   });
 }
 
 if (editCancel && editModal) {
   editCancel.addEventListener("click", () => {
     editModal.classList.add("hidden");
+    editModal.classList.remove("flex");
   });
 }
 
@@ -447,6 +451,7 @@ if (editModal) {
   editModal.addEventListener("click", (event) => {
     if (event.target === editModal) {
       editModal.classList.add("hidden");
+      editModal.classList.remove("flex");
     }
   });
 }
@@ -501,6 +506,7 @@ if (editForm) {
 
       await loadProfileInfo();
       editModal?.classList.add("hidden");
+      editModal?.classList.remove("flex");
       showToast("Profile updated successfully.");
     } catch (error) {
       console.error(error);
