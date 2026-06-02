@@ -20,6 +20,9 @@ const deleteBtn = document.querySelector("#edit-delete");
 const cancelBtn = document.querySelector("#edit-cancel");
 const toastEl = document.querySelector("#edit-toast");
 const mediaPreviewEl = document.querySelector("#media-preview");
+const deleteModal = document.querySelector("#delete-modal");
+const deleteModalCancel = document.querySelector("#delete-modal-cancel");
+const deleteModalConfirm = document.querySelector("#delete-modal-confirm");
 
 let toastTimeoutId = null;
 let currentListing = null;
@@ -211,12 +214,18 @@ async function handleSubmit(event) {
 }
 
 async function handleDelete() {
-  if (!listingId) return;
+  if (!listingId || !deleteModal) return;
+  deleteModal.classList.remove("hidden");
+}
 
-  const confirmed = window.confirm(
-    "Are you sure you want to delete this listing? This cannot be undone."
-  );
-  if (!confirmed) return;
+function closeDeleteModal() {
+  if (!deleteModal) return;
+  deleteModal.classList.add("hidden");
+}
+
+async function confirmDelete() {
+  closeDeleteModal();
+  if (!listingId) return;
 
   deleteBtn.disabled = true;
   showMessage("Deleting listing…", "success");
@@ -307,6 +316,17 @@ function init() {
   }
   if (cancelBtn) {
     cancelBtn.addEventListener("click", handleCancel);
+  }
+  if (deleteModalCancel) {
+    deleteModalCancel.addEventListener("click", closeDeleteModal);
+  }
+  if (deleteModalConfirm) {
+    deleteModalConfirm.addEventListener("click", confirmDelete);
+  }
+  if (deleteModal) {
+    deleteModal.addEventListener("click", (e) => {
+      if (e.target === deleteModal) closeDeleteModal();
+    });
   }
 
   loadListing();
